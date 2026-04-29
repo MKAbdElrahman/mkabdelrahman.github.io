@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 290" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.2"/>
+      <feOffset dx="0" dy="1" result="o"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.18"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="720" height="290" fill="#fafafa"/>
+
+  <text x="360" y="30" text-anchor="middle" font-size="15" font-weight="600" fill="#0f172a">Strategy 1: Replace all</text>
+
+  <text x="40" y="80" font-size="10" font-weight="600" fill="#94a3b8" letter-spacing="1">BEFORE</text>
+
+  <g transform="translate(120, 60)" filter="url(#soft)">
+    <rect x="0"   y="0" width="50" height="42" rx="5" fill="#3b82f6"/>
+    <rect x="54"  y="0" width="50" height="42" rx="5" fill="#94a3b8"/>
+    <rect x="108" y="0" width="50" height="42" rx="5" fill="#10b981"/>
+    <rect x="162" y="0" width="50" height="42" rx="5" fill="#3b82f6"/>
+    <rect x="216" y="0" width="50" height="42" rx="5" fill="#94a3b8"/>
+    <rect x="270" y="0" width="50" height="42" rx="5" fill="#10b981"/>
+    <rect x="324" y="0" width="50" height="42" rx="5" fill="#3b82f6"/>
+    <rect x="378" y="0" width="50" height="42" rx="5" fill="#94a3b8"/>
+    <rect x="432" y="0" width="50" height="42" rx="5" fill="#10b981"/>
+  </g>
+  <g transform="translate(120, 60)" font-size="13" font-weight="600" fill="white" text-anchor="middle">
+    <text x="25"  y="26">U₁</text><text x="79"  y="26">A₁</text><text x="133" y="26">T₁</text>
+    <text x="187" y="26">U₂</text><text x="241" y="26">A₂</text><text x="295" y="26">T₂</text>
+    <text x="349" y="26">U₃</text><text x="403" y="26">A₃</text><text x="457" y="26">T₃</text>
+  </g>
+
+  <path d="M 120 116 L 120 124 L 602 124 L 602 116" stroke="#94a3b8" stroke-width="1.5" fill="none"/>
+  <text x="361" y="146" text-anchor="middle" font-size="12" fill="#475569" font-style="italic">summarize entire history</text>
+
+  <line x1="361" y1="156" x2="361" y2="190" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <text x="40" y="226" font-size="10" font-weight="600" fill="#94a3b8" letter-spacing="1">AFTER</text>
+
+  <g transform="translate(336, 206)" filter="url(#soft)">
+    <rect x="0" y="0" width="50" height="42" rx="5" fill="#f59e0b"/>
+  </g>
+  <text x="361" y="232" text-anchor="middle" font-size="13" font-weight="600" fill="white">S</text>
+
+  <text x="361" y="272" text-anchor="middle" font-size="11" fill="#64748b">entire prior history collapsed into a single message</text>
+
+  <g transform="translate(40, 254)" font-size="10" fill="#64748b">
+    <rect x="0"   y="0" width="10" height="10" rx="2" fill="#3b82f6"/><text x="14" y="9">user</text>
+    <rect x="56"  y="0" width="10" height="10" rx="2" fill="#94a3b8"/><text x="70" y="9">assistant</text>
+    <rect x="138" y="0" width="10" height="10" rx="2" fill="#10b981"/><text x="152" y="9">tool</text>
+    <rect x="186" y="0" width="10" height="10" rx="2" fill="#f59e0b"/><text x="200" y="9">summary</text>
+  </g>
+</svg>
