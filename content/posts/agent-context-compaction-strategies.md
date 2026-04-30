@@ -1,7 +1,7 @@
 ---
 title: "Compaction Algorithms for Long-Running Agent Sessions"
 date: "2026-04-30"
-description: "Three canonical strategies for shrinking a conversation when its context window fills — what each one preserves, what it discards, and where the resulting summary lands on the conversation's timeline."
+description: "Three canonical strategies for shrinking a conversation when its context window fills — what each one preserves and what it discards."
 tags: [agents, llm, context-management, summarization]
 categories: ["technology"]
 ---
@@ -10,16 +10,13 @@ categories: ["technology"]
 
 A long-running agent accumulates messages over time: user prompts, model responses, reasoning traces, tool calls, tool outputs. The model's context window is finite — from a hundred thousand tokens on the smaller end to a million or more on the largest current frontier models. Once the conversation no longer fits, continuing without intervention triggers a hard error or silent truncation by the provider.
 
-A **compaction algorithm** shrinks the conversation in place. The interesting strategies share a single shape: pick a moment on the conversation's timeline, collapse everything older than that moment into a single summary message, decide where on the post-compaction timeline that summary lands. The simplest possible approach — summarize everything and start over with just the summary — is also observed in the wild but is uninteresting on the timeline because it has no preserved tail to position the summary against; we set it aside and focus on the three strategies that actually preserve some recent context.
+A **compaction algorithm** shrinks the conversation in place. The interesting strategies share a single shape: pick a moment on the conversation's timeline (the *cut-off*), collapse everything older into a single summary message, place the summary at the cut-off, and keep everything newer verbatim. The simplest possible approach — summarize everything and start over with just the summary — is also observed in the wild but has no preserved tail and so doesn't really inhabit the timeline; we set it aside and focus on the three strategies that actually preserve some recent context.
 
 ## The conversation as a timeline
 
 A conversation is a sequence ordered in time. Older messages on the left, newer ones on the right. The model reads the array left-to-right on every turn — the leftmost item is the oldest thing it remembers, the rightmost is the most recent thing it has to respond to. New user turns extend the right edge.
 
-When the conversation outgrows the window, a strategy answers two questions:
-
-1. **The cut-off** — which moment on the timeline is the boundary? Everything older collapses into a summary; everything newer stays verbatim.
-2. **The summary's resting place** — on the post-compaction timeline, where does the summary go? Two of the three strategies below place it at the cut-off moment, preserving the chronological order in which it was created. The third relocates it to the conversation's beginning as a synthetic preface.
+When the conversation outgrows the window, a strategy answers one question: **which moment on the timeline is the cut-off?** Everything older collapses into a single summary message, the summary lands at the cut-off, and everything newer stays verbatim. The three strategies below differ entirely in how they pick the cut-off.
 
 ## Strategy 1: Preserve user messages
 
@@ -33,8 +30,6 @@ A token cap (~20K tokens worth) bounds how many user messages survive, selected 
 
 Cut-off rule: walk backward from the present, accumulating tokens, until you reach `p × total_tokens` (observed: `p = 0.3`); snap to the next user-message boundary so the preserved tail starts on a user turn. Everything earlier than that snapped point collapses; everything in the recent fraction stays verbatim regardless of role.
 
-This is the outlier on summary placement. The implementation does **not** put the summary at the cut-off. It relocates the summary to the start of the post-compaction timeline as a synthetic preface, framed as `[user: <state_snapshot>, assistant: "Got it. Thanks for the additional context!", ...preserved_tail]`. The actual chronology of the summary's creation is discarded — the model reads it as if the user had opened the conversation by pasting that snapshot.
-
 ![Strategy 2: Preserve a recent token fraction](/images/compaction/strategy2.svg)
 
 ## Strategy 3: Preserve recent turns
@@ -47,11 +42,11 @@ The summary sits at the cut-off — chronologically immediately after the last p
 
 ## Comparison
 
-| Strategy | What survives the cut | Where the summary lands |
+| Strategy | Cut-off rule | What survives the cut |
 |---|---|---|
-| Preserve user messages | every user message (within token budget) | at the cut-off, after the last preserved user msg |
-| Preserve recent token fraction | the last p × total_tokens, regardless of role | relocated to the start as a synthetic preface |
-| Preserve recent turns | the last N complete turns (within budget) | at the cut-off, after the last preserved turn |
+| Preserve user messages | every user message is on the "keep" side; agent items are on the "drop" side | every user message (within a ~20K token budget) |
+| Preserve recent token fraction | walk back until `p × total_tokens` collected, snap to user-msg boundary | everything in the recent fraction, regardless of role |
+| Preserve recent turns | the user-msg boundary that starts the (M − N + 1)ᵗʰ turn | the last N complete turns (within per-turn budget) |
 
 ## When to choose which
 
@@ -87,96 +82,13 @@ Implementations may use any combination of the three.
 
 ## The shared shape
 
-Every strategy reduces to the same two artifacts the host stores: a generated **summary message**, and a **preserved-from pointer** marking where the preserved messages begin on the original timeline. On the next turn, a history loader splices them.
+Every strategy reduces to the same two artifacts the host stores: a generated **summary message**, and a **preserved-from pointer** marking where the preserved messages begin on the original timeline. On the next turn, a history loader splices them: `[…messages-from-pointer-onwards, summary]`.
 
-| Strategy | Preserved-from pointer | Summary placement |
-|---|---|---|
-| Preserve user messages | first kept user message | after preserved messages (at the cut-off) |
-| Preserve recent token fraction | first message of the recent fraction | before preserved messages (synthetic preface) |
-| Preserve recent turns | first user message of the (M − N + 1)ᵗʰ turn | after preserved messages (at the cut-off) |
+| Strategy | Preserved-from pointer |
+|---|---|
+| Preserve user messages | first kept user message |
+| Preserve recent token fraction | first message of the recent fraction |
+| Preserve recent turns | first user message of the (M − N + 1)ᵗʰ turn |
 
-Two of three place the summary at the cut-off in chronological order — the natural fit, since the summary is created at the compaction event, which on the timeline is later than every message it summarizes. Recent-token-fraction discards that chronology and relocates the summary to be the conversation's opener.
+Swapping strategies is a question of which pointer value gets written, not of storage shape — the host ships one replacement mechanism and applies it uniformly.
 
-Swapping strategies is a question of which pointer values get written, not of storage shape — the host ships one replacement mechanism and applies it uniformly.
-
-## The unified algorithm
-
-First, the types in play:
-
-```python
-# A Message is the host's existing per-turn record. Every Message has an
-# `id`, a role ∈ {user, assistant, tool}, and a content payload.
-Message = (id, role, content)
-
-# Where the summary lands on the post-compaction timeline.
-#   AT_CUTOFF — summary follows the preserved messages (chronological)
-#   AS_OPENER — summary precedes the preserved messages (synthetic preface)
-Placement = AT_CUTOFF | AS_OPENER
-
-# A Strategy is a 4-tuple bundling everything that varies across algorithms.
-# All four functions are pure: they take history (and a parameter) and
-# return a value; nothing is persisted from inside them.
-Strategy = (
-    pre_trim:  (history: [Message], context_limit: int) -> [Message],
-    prompt:    str,                                        # system prompt for summarization
-    preserve:  (history: [Message]) -> [Message],          # the verbatim survivors
-    placement: Placement,
-)
-
-# What compact() returns to the caller. The host writes these three
-# fields onto the session row; nothing else needs to change in storage.
-CompactResult = (
-    summary:         Message,         # the new summary message
-    preserved_from:  id,              # first id in the preserved set
-    placement:       Placement,
-)
-```
-
-The pipeline is one function, parameterised by the strategy:
-
-```python
-# `lm.summarize(system_prompt, history) -> Message` is the host's LM client.
-def compact(history, strategy, lm, context_limit) -> CompactResult:
-    # 1. Pre-trim: shrink the summarizer's input so the call itself fits.
-    summarizer_input = strategy.pre_trim(history, context_limit)
-
-    # 2. Summarize: produce one new Message.
-    summary = lm.summarize(strategy.prompt, summarizer_input)
-
-    # 3. Pick which originals survive the cut.
-    preserved = strategy.preserve(history)
-
-    # 4. Hand back the artifacts the host needs to persist.
-    return CompactResult(
-        summary        = summary,
-        preserved_from = preserved[0].id,
-        placement      = strategy.placement,
-    )
-```
-
-The three canonical strategies are just different fillings of the 4-tuple. The function names below are the operations defined in each strategy's section earlier in this post:
-
-```python
-# Strategy(pre_trim,                prompt,                 preserve,                       placement)
-PreserveUser     = Strategy(drop_agent_items,    handoff_prompt,        top_user_msgs_within_budget,    AT_CUTOFF)
-PreserveFrac(p)  = Strategy(truncate_tool_outs,  state_snapshot_prompt, tail_after_user_split(p),       AS_OPENER)
-PreserveTurns(N) = Strategy(prune_old_tool_outs, state_snapshot_prompt, last_N_turns_within_budget(N),  AT_CUTOFF)
-```
-
-The loader runs on each subsequent turn. Given the persisted result and the full message log, it reconstructs what the LM sees:
-
-```python
-# `index_of(id, msgs)` returns the position of the message with that id.
-# `ack` is the synthetic assistant acknowledgement used by AS_OPENER hosts
-#  (e.g. "Got it. Thanks for the additional context!").
-def lm_history(result: CompactResult | None, all_messages: [Message]) -> [Message]:
-    if result is None:                                   # session never compacted
-        return all_messages
-    preserved = all_messages[index_of(result.preserved_from, all_messages):]
-    if result.placement == AT_CUTOFF:
-        return [*preserved, result.summary]
-    else:                                                # AS_OPENER
-        return [result.summary, ack, *preserved]
-```
-
-Triggering — deciding *when* `compact()` runs — is a separate predicate over the session's token usage and any explicit user signal, and is orthogonal to which strategy runs.

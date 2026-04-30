@@ -63,24 +63,22 @@
   <line x1="360" y1="180" x2="360" y2="208" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
   <text x="372" y="198" font-size="10" fill="#475569" font-style="italic">compact</text>
 
-  <!-- AFTER: S (synthetic preface) + ack + preserved tail (Turn 4 + Turn 5) -->
-  <text x="60" y="228" font-size="11" fill="#64748b">After — summary relocated to the start as synthetic preface</text>
+  <!-- AFTER: preserved tail (Turn 4 + Turn 5) + S at the cut-off -->
+  <text x="60" y="228" font-size="11" fill="#64748b">After — recent fraction preserved in chrono order, summary at the cut-off</text>
   <rect x="60" y="236" width="600" height="36" rx="6" stroke="#cbd5e1" stroke-width="1" fill="white"/>
   <g transform="translate(60, 236)">
-    <rect x="6"   y="0" width="80" height="36" rx="4" fill="#f59e0b"/>
-    <rect x="89"  y="0" width="36" height="36" rx="4" fill="#cbd5e1"/>
-    <rect x="128" y="0" width="50" height="36" rx="4" fill="#3b82f6"/>
-    <rect x="181" y="0" width="50" height="36" rx="4" fill="#94a3b8"/>
-    <rect x="234" y="0" width="50" height="36" rx="4" fill="#3b82f6"/>
-    <rect x="287" y="0" width="50" height="36" rx="4" fill="#94a3b8"/>
+    <rect x="6"   y="0" width="50" height="36" rx="4" fill="#3b82f6"/>
+    <rect x="59"  y="0" width="50" height="36" rx="4" fill="#94a3b8"/>
+    <rect x="112" y="0" width="50" height="36" rx="4" fill="#3b82f6"/>
+    <rect x="165" y="0" width="50" height="36" rx="4" fill="#94a3b8"/>
+    <rect x="223" y="0" width="80" height="36" rx="4" fill="#f59e0b"/>
   </g>
   <g transform="translate(60, 236)" font-size="14" font-weight="700" fill="white" text-anchor="middle">
-    <text x="46"  y="23">S</text>
-    <text x="153" y="23">u</text>
-    <text x="206" y="23">m</text>
-    <text x="259" y="23">u</text>
-    <text x="312" y="23">m</text>
+    <text x="31"  y="23">u</text>
+    <text x="84"  y="23">m</text>
+    <text x="137" y="23">u</text>
+    <text x="190" y="23">m</text>
+    <text x="263" y="23">S</text>
   </g>
-  <text x="107" y="259" text-anchor="middle" font-size="9" fill="#475569">ack</text>
   <text x="500" y="259" text-anchor="middle" font-size="10" fill="#94a3b8" font-style="italic">free for new turns →</text>
 </svg>
