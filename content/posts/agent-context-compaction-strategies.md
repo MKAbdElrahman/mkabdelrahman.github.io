@@ -20,9 +20,7 @@ When the conversation outgrows the window, a strategy answers one question: **wh
 
 ## Strategy 1: Preserve user messages
 
-Split-point rule: every user message survives the cut; every agent-generated item (assistant text, tool calls, tool outputs) collapses into the summary. User messages keep their relative chronological order on the post-compaction timeline; the summary sits at the split point — chronologically just after the latest preserved user message.
-
-A token cap (~20K tokens worth) bounds how many user messages survive, selected newest-first then re-ordered chronologically. Each message needs a role marker so the algorithm can sort users from non-users.
+Split-point rule: walking newest-first, keep every user message and drop everything else until a max-token cap (~20K) is reached. Kept user messages are re-ordered chronologically; the summary sits at the split point, just after the latest preserved user message.
 
 ![Strategy 1: Preserve user messages](/images/compaction/strategy1.svg)
 
