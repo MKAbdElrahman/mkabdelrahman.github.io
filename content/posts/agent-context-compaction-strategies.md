@@ -1,5 +1,5 @@
 ---
-title: "Compaction Algorithms for Long-Running Agent Sessions"
+title: "[Draft] Compaction Algorithms for Long-Running Agent Sessions"
 date: "2026-04-30"
 description: "Three canonical strategies for shrinking a conversation when its context window fills — what each one preserves and what it discards."
 tags: [agents, llm, context-management, summarization]
@@ -82,6 +82,12 @@ Triggers fall into three kinds:
 Triggers compose. An inline auto-compact in practice is **budget AND structural**: `total >= auto_compact_limit && (model_needs_follow_up || has_pending_input)`. The structural predicate guards against compacting at the wrong moment — e.g. just as a turn was about to end naturally.
 
 Most non-trivial systems mix all three: a budget trigger to react to pressure, structural triggers to do work eagerly so pressure builds slower, and temporal triggers for housekeeping that nothing else hooks.
+
+## Measurement
+
+Triggers depend on token counts, and token counts depend on estimates.
+
+A crude back-of-envelope formula: `tokens ≈ characters / 4`.
 
 ## The shared shape
 
