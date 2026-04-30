@@ -3,55 +3,86 @@
     <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
     </marker>
-    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur in="SourceAlpha" stdDeviation="1.2"/>
-      <feOffset dx="0" dy="1" result="o"/>
-      <feComponentTransfer><feFuncA type="linear" slope="0.18"/></feComponentTransfer>
-      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
+    <marker id="axis-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/>
+    </marker>
   </defs>
 
   <rect width="720" height="290" fill="#fafafa"/>
 
-  <text x="360" y="30" text-anchor="middle" font-size="15" font-weight="600" fill="#0f172a">Strategy 1: Replace all</text>
+  <text x="360" y="28" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">Strategy 1: Preserve user messages</text>
 
-  <text x="40" y="80" font-size="10" font-weight="600" fill="#94a3b8" letter-spacing="1">BEFORE</text>
+  <!-- Time axis -->
+  <text x="60" y="52" font-size="10" font-weight="600" fill="#94a3b8" letter-spacing="0.5">past</text>
+  <line x1="92" y1="48" x2="652" y2="48" stroke="#cbd5e1" stroke-width="1" marker-end="url(#axis-arrow)"/>
+  <text x="660" y="52" font-size="10" font-weight="600" fill="#94a3b8" letter-spacing="0.5">now</text>
 
-  <g transform="translate(120, 60)" filter="url(#soft)">
-    <rect x="0"   y="0" width="50" height="42" rx="5" fill="#3b82f6"/>
-    <rect x="54"  y="0" width="50" height="42" rx="5" fill="#94a3b8"/>
-    <rect x="108" y="0" width="50" height="42" rx="5" fill="#10b981"/>
-    <rect x="162" y="0" width="50" height="42" rx="5" fill="#3b82f6"/>
-    <rect x="216" y="0" width="50" height="42" rx="5" fill="#94a3b8"/>
-    <rect x="270" y="0" width="50" height="42" rx="5" fill="#10b981"/>
-    <rect x="324" y="0" width="50" height="42" rx="5" fill="#3b82f6"/>
-    <rect x="378" y="0" width="50" height="42" rx="5" fill="#94a3b8"/>
-    <rect x="432" y="0" width="50" height="42" rx="5" fill="#10b981"/>
+  <!-- BEFORE -->
+  <text x="60" y="80" font-size="11" fill="#64748b">Before — context window full (5 turns of u + m each)</text>
+  <rect x="60" y="88" width="600" height="36" rx="6" stroke="#cbd5e1" stroke-width="1" fill="white"/>
+  <!-- 5 turns × (u + m) boxes; each box 50w; within-turn gap 3, between-turn gap 8 -->
+  <g transform="translate(60, 88)">
+    <!-- T1 -->
+    <rect x="27"  y="0" width="50" height="36" rx="4" fill="#3b82f6"/>
+    <rect x="80"  y="0" width="50" height="36" rx="4" fill="#94a3b8"/>
+    <!-- T2 -->
+    <rect x="138" y="0" width="50" height="36" rx="4" fill="#3b82f6"/>
+    <rect x="191" y="0" width="50" height="36" rx="4" fill="#94a3b8"/>
+    <!-- T3 -->
+    <rect x="249" y="0" width="50" height="36" rx="4" fill="#3b82f6"/>
+    <rect x="302" y="0" width="50" height="36" rx="4" fill="#94a3b8"/>
+    <!-- T4 -->
+    <rect x="360" y="0" width="50" height="36" rx="4" fill="#3b82f6"/>
+    <rect x="413" y="0" width="50" height="36" rx="4" fill="#94a3b8"/>
+    <!-- T5 -->
+    <rect x="471" y="0" width="50" height="36" rx="4" fill="#3b82f6"/>
+    <rect x="524" y="0" width="50" height="36" rx="4" fill="#94a3b8"/>
   </g>
-  <g transform="translate(120, 60)" font-size="13" font-weight="600" fill="white" text-anchor="middle">
-    <text x="25"  y="26">U₁</text><text x="79"  y="26">A₁</text><text x="133" y="26">T₁</text>
-    <text x="187" y="26">U₂</text><text x="241" y="26">A₂</text><text x="295" y="26">T₂</text>
-    <text x="349" y="26">U₃</text><text x="403" y="26">A₃</text><text x="457" y="26">T₃</text>
+  <g transform="translate(60, 88)" font-size="14" font-weight="700" fill="white" text-anchor="middle">
+    <text x="52"  y="23">u</text><text x="105" y="23">m</text>
+    <text x="163" y="23">u</text><text x="216" y="23">m</text>
+    <text x="274" y="23">u</text><text x="327" y="23">m</text>
+    <text x="385" y="23">u</text><text x="438" y="23">m</text>
+    <text x="496" y="23">u</text><text x="549" y="23">m</text>
+  </g>
+  <!-- X marks on every m (non-user) box -->
+  <g transform="translate(60, 88)" stroke="#dc2626" stroke-width="1.8" stroke-linecap="round">
+    <g transform="translate(80,0)"><line x1="10" y1="8" x2="40" y2="28"/><line x1="40" y1="8" x2="10" y2="28"/></g>
+    <g transform="translate(191,0)"><line x1="10" y1="8" x2="40" y2="28"/><line x1="40" y1="8" x2="10" y2="28"/></g>
+    <g transform="translate(302,0)"><line x1="10" y1="8" x2="40" y2="28"/><line x1="40" y1="8" x2="10" y2="28"/></g>
+    <g transform="translate(413,0)"><line x1="10" y1="8" x2="40" y2="28"/><line x1="40" y1="8" x2="10" y2="28"/></g>
+    <g transform="translate(524,0)"><line x1="10" y1="8" x2="40" y2="28"/><line x1="40" y1="8" x2="10" y2="28"/></g>
+  </g>
+  <g font-size="10" fill="#64748b" text-anchor="middle">
+    <text x="138" y="143">Turn 1</text>
+    <text x="249" y="143">Turn 2</text>
+    <text x="360" y="143">Turn 3</text>
+    <text x="471" y="143">Turn 4</text>
+    <text x="582" y="143">Turn 5</text>
   </g>
 
-  <path d="M 120 116 L 120 124 L 602 124 L 602 116" stroke="#94a3b8" stroke-width="1.5" fill="none"/>
-  <text x="361" y="146" text-anchor="middle" font-size="12" fill="#475569" font-style="italic">summarize entire history</text>
+  <!-- arrow -->
+  <line x1="360" y1="170" x2="360" y2="200" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="372" y="190" font-size="10" fill="#475569" font-style="italic">compact</text>
 
-  <line x1="361" y1="156" x2="361" y2="190" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
-
-  <text x="40" y="226" font-size="10" font-weight="600" fill="#94a3b8" letter-spacing="1">AFTER</text>
-
-  <g transform="translate(336, 206)" filter="url(#soft)">
-    <rect x="0" y="0" width="50" height="42" rx="5" fill="#f59e0b"/>
+  <!-- AFTER: 5 user msgs + summary at the cut-off -->
+  <text x="60" y="220" font-size="11" fill="#64748b">After — every u kept in chrono order, summary at the cut-off</text>
+  <rect x="60" y="228" width="600" height="36" rx="6" stroke="#cbd5e1" stroke-width="1" fill="white"/>
+  <g transform="translate(60, 228)">
+    <rect x="6"   y="0" width="50" height="36" rx="4" fill="#3b82f6"/>
+    <rect x="59"  y="0" width="50" height="36" rx="4" fill="#3b82f6"/>
+    <rect x="112" y="0" width="50" height="36" rx="4" fill="#3b82f6"/>
+    <rect x="165" y="0" width="50" height="36" rx="4" fill="#3b82f6"/>
+    <rect x="218" y="0" width="50" height="36" rx="4" fill="#3b82f6"/>
+    <rect x="276" y="0" width="80" height="36" rx="4" fill="#f59e0b"/>
   </g>
-  <text x="361" y="232" text-anchor="middle" font-size="13" font-weight="600" fill="white">S</text>
-
-  <text x="361" y="272" text-anchor="middle" font-size="11" fill="#64748b">entire prior history collapsed into a single message</text>
-
-  <g transform="translate(40, 254)" font-size="10" fill="#64748b">
-    <rect x="0"   y="0" width="10" height="10" rx="2" fill="#3b82f6"/><text x="14" y="9">user</text>
-    <rect x="56"  y="0" width="10" height="10" rx="2" fill="#94a3b8"/><text x="70" y="9">assistant</text>
-    <rect x="138" y="0" width="10" height="10" rx="2" fill="#10b981"/><text x="152" y="9">tool</text>
-    <rect x="186" y="0" width="10" height="10" rx="2" fill="#f59e0b"/><text x="200" y="9">summary</text>
+  <g transform="translate(60, 228)" font-size="14" font-weight="700" fill="white" text-anchor="middle">
+    <text x="31"  y="23">u</text>
+    <text x="84"  y="23">u</text>
+    <text x="137" y="23">u</text>
+    <text x="190" y="23">u</text>
+    <text x="243" y="23">u</text>
+    <text x="316" y="23">S</text>
   </g>
+  <text x="500" y="251" text-anchor="middle" font-size="10" fill="#94a3b8" font-style="italic">free for new turns →</text>
 </svg>

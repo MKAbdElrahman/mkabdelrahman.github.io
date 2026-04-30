@@ -1,69 +1,71 @@
 ---
 title: "Compaction Algorithms for Long-Running Agent Sessions"
 date: "2026-04-30"
-description: "Four canonical strategies for shrinking a conversation when the context window fills — what each one preserves, what it discards, and the trade-offs between fidelity and headroom."
+description: "Three canonical strategies for shrinking a conversation when its context window fills — what each one preserves, what it discards, and where the resulting summary lands on the conversation's timeline."
 tags: [agents, llm, context-management, summarization]
 categories: ["technology"]
 ---
 
 ## The problem
 
-A long-running agent accumulates messages: user prompts, model responses, reasoning traces, tool calls, tool outputs. The model's context window is finite — from a hundred thousand tokens on the smaller end to a million or more on the largest current frontier models. Once the conversation no longer fits, continuing without intervention triggers a hard error or silent truncation by the provider.
+A long-running agent accumulates messages over time: user prompts, model responses, reasoning traces, tool calls, tool outputs. The model's context window is finite — from a hundred thousand tokens on the smaller end to a million or more on the largest current frontier models. Once the conversation no longer fits, continuing without intervention triggers a hard error or silent truncation by the provider.
 
-A **compaction algorithm** shrinks the conversation. It's structurally a three-part decision:
+A **compaction algorithm** shrinks the conversation in place. The interesting strategies share a single shape: pick a moment on the conversation's timeline, collapse everything older than that moment into a single summary message, decide where on the post-compaction timeline that summary lands. The simplest possible approach — summarize everything and start over with just the summary — is also observed in the wild but is uninteresting on the timeline because it has no preserved tail to position the summary against; we set it aside and focus on the three strategies that actually preserve some recent context.
 
-1. **Trigger** — when compaction runs.
-2. **Preservation** — which existing messages are kept verbatim and which get rolled into a summary.
-3. **Summary shape** — the prompt template the summarization call is given.
+## The conversation as a timeline
 
-The preservation axis is where the algorithms differ most. Four strategies are observed in real code.
+A conversation is a sequence ordered in time. Older messages on the left, newer ones on the right. The model reads the array left-to-right on every turn — the leftmost item is the oldest thing it remembers, the rightmost is the most recent thing it has to respond to. New user turns extend the right edge.
 
-## Strategy 1: Replace all
+When the conversation outgrows the window, a strategy answers two questions:
 
-Send the entire conversation to the model with an instruction to produce a structured handoff summary (a fixed-section markdown template — sections like current state, files involved, technical context, next steps). Replace the entire history with the summary as a single new message.
+1. **The cut-off** — which moment on the timeline is the boundary? Everything older collapses into a summary; everything newer stays verbatim.
+2. **The summary's resting place** — on the post-compaction timeline, where does the summary go? Two of the three strategies below place it at the cut-off moment, preserving the chronological order in which it was created. The third relocates it to the conversation's beginning as a synthetic preface.
 
-![Strategy 1: Replace all](/images/compaction/strategy1.svg)
+## Strategy 1: Preserve user messages
 
-`S` is the summary. Future turns continue with `[S, new exchanges…]`.
+Cut-off rule: every user message survives the cut; every agent-generated item (assistant text, tool calls, tool outputs) collapses into the summary. User messages keep their relative chronological order on the post-compaction timeline; the summary sits at the cut-off — chronologically just after the latest preserved user message.
 
-## Strategy 2: Preserve user messages
+A token cap (~20K tokens worth) bounds how many user messages survive, selected newest-first then re-ordered chronologically. Each message needs a role marker so the algorithm can sort users from non-users.
 
-Pre-trim: walk the history from newest to oldest dropping *agent-generated* items (assistant responses, tool calls, tool outputs) until the rest fits the context budget. Summarize what's left. Build the new history as a token-budgeted slice of the most recent user messages with the summary appended at the end.
+![Strategy 1: Preserve user messages](/images/compaction/strategy1.svg)
 
-![Strategy 2: Preserve user messages](/images/compaction/strategy2.svg)
+## Strategy 2: Preserve a recent token fraction
 
-The token budget for the user-message slice is a hard cap (e.g., 20K tokens worth, selected newest-first then re-ordered chronologically).
+Cut-off rule: walk backward from the present, accumulating tokens, until you reach `p × total_tokens` (observed: `p = 0.3`); snap to the next user-message boundary so the preserved tail starts on a user turn. Everything earlier than that snapped point collapses; everything in the recent fraction stays verbatim regardless of role.
 
-This strategy needs a marker on each message indicating who generated it; a role string (user / assistant / tool) is sufficient.
+This is the outlier on summary placement. The implementation does **not** put the summary at the cut-off. It relocates the summary to the start of the post-compaction timeline as a synthetic preface, framed as `[user: <state_snapshot>, assistant: "Got it. Thanks for the additional context!", ...preserved_tail]`. The actual chronology of the summary's creation is discarded — the model reads it as if the user had opened the conversation by pasting that snapshot.
 
-## Strategy 3: Preserve a recent token fraction
+![Strategy 2: Preserve a recent token fraction](/images/compaction/strategy2.svg)
 
-Pick a fraction `p` (observed values: 0.3). Walk the history from newest to oldest accumulating token cost until you've collected `p × total_tokens` worth — that's the **preserved tail**. Summarize everything older as a single state-snapshot message; place the summary at the head, the preserved tail after.
+## Strategy 3: Preserve recent turns
 
-![Strategy 3: Preserve a recent token fraction](/images/compaction/strategy3.svg)
+Cut-off rule: a "turn" is one user message plus everything generated in response (assistant text, tool calls, tool outputs) up to the next user message. Keep the last `N` complete turns (default `N=2`); collapse everything older into the summary. A per-turn token budget caps each preserved turn (observed defaults: 25% of usable context, clamped to [2K, 8K]).
 
-The split point is computed by character or token count, then snapped to the next user-message boundary so the preserved tail starts on a user turn rather than mid-exchange. Within the tail, preservation is role-agnostic — whatever messages fall in the recent fraction stay verbatim regardless of who generated them.
+The summary sits at the cut-off — chronologically immediately after the last preserved turn.
 
-## Strategy 4: Preserve recent turns
-
-A "turn" is one user message plus everything generated in response (assistant text, tool calls, tool outputs) up to the next user message. Preserve the last `N` turns (default observed: `N=2`); summarize everything older.
-
-![Strategy 4: Preserve recent turns](/images/compaction/strategy4.svg)
-
-The boundary is determined by walking user-message indices from newest backward. Implementations pair this with a per-turn token budget: preserve up to N turns or up to T tokens, whichever is smaller (observed defaults: 25% of usable context, clamped to [2K, 8K]).
+![Strategy 3: Preserve recent turns](/images/compaction/strategy3.svg)
 
 ## Comparison
 
-| Strategy | Preserves | Selection basis |
+| Strategy | What survives the cut | Where the summary lands |
 |---|---|---|
-| Replace all | Nothing — summary is the new history | n/a |
-| User messages | User messages within a token budget; summary appended at end | per-message size by role |
-| Recent token fraction | Newest p × total tokens regardless of role; summary at head | token sum |
-| Recent N turns | Last N user-bounded exchanges; summary at head | per-turn size, capped by token budget |
+| Preserve user messages | every user message (within token budget) | at the cut-off, after the last preserved user msg |
+| Preserve recent token fraction | the last p × total_tokens, regardless of role | relocated to the start as a synthetic preface |
+| Preserve recent turns | the last N complete turns (within budget) | at the cut-off, after the last preserved turn |
+
+## When to choose which
+
+Strategy choice is application-specific. Two judgments about the workload do most of the work:
+
+**Are user and agent messages equally important?** If the user's intent is the durable record and the agent's responses are recoverable derivations from those prompts, role asymmetry is real and **Strategy 1** fits — it keeps every user message verbatim and lets the summary swallow everything else. If both sides carry equal weight — agent reasoning, tool outputs, and the model's earlier choices feed into later turns as much as the user's prompts do — **Strategy 2** and **Strategy 3** are the right shape, since both preserve recent content regardless of role.
+
+**How much do recent messages drive the next decision?** If the model needs the last few exchanges in full to answer well — "what did the model just suggest?", "did the last tool call succeed?" — recency matters a lot, and the choice is between Strategy 2 (token-budgeted recency, snapped to a user boundary) and Strategy 3 (whole-turn recency, never split mid-tool-call). If recency matters less than the cumulative trail of decisions, Strategy 1 is fine — the user's prompts capture the trajectory, and the summary captures the agent's exploration.
+
+The two factors interact. An agent doing long-form research where the user mostly says "continue" or "look at X" gets little signal from preserved user messages — the recent agent reasoning is the dense signal, so Strategy 2 or 3 is preferable. A coding agent where the user explicitly states each goal benefits from Strategy 1 — the goals are the structure, the agent's exploration between them can be lossy. There is no universal answer.
 
 ## A common pre-trim step
 
-All four strategies do something *before* the LLM call to keep the input itself small. The reason is the same — the model that's going to write the summary is also bound by a context window, and feeding it 100% of an overflowing conversation just moves the overflow into the summarization call. Concrete pre-trim moves seen in practice:
+All three strategies do something *before* the LLM call to keep the input itself small. The reason is the same — the model that's going to write the summary is also bound by a context window, and feeding it 100% of an overflowing conversation just moves the overflow into the summarization call. Concrete pre-trim moves seen in practice:
 
 - Iteratively dropping the oldest items and retrying when the summarization call itself overflows.
 - Walking newest-first and dropping agent-generated items (assistant text, tool calls, tool outputs) until the input fits, leaving user messages intact.
@@ -71,22 +73,7 @@ All four strategies do something *before* the LLM call to keep the input itself 
 - Hard-capping the total token budget for tool-response content at some fraction of the model's window (e.g., 50K tokens).
 - Marking older tool outputs as "compacted" with a timestamp so they render as `[Old tool result content cleared]` to the LLM but stay queryable in the host's storage.
 
-The output of pre-trim is what actually goes to the summarization call. The strategy's preservation rule applies to the *original* history (which messages survive verbatim into the post-summary state), not to what the summarizer sees.
-
-## The shared shape
-
-Every strategy reduces to two artifacts the host stores: a generated **summary message**, and an optional **preserved-from pointer** identifying where the preserved tail begins in the original message list. On the next turn, a history loader splices them back together.
-
-Per strategy, those artifacts look like:
-
-| Strategy | Summary position | Preserved-from pointer |
-|---|---|---|
-| Replace all | alone — no tail | none |
-| User messages | tail (after the kept user messages) | first kept user message |
-| Recent token fraction | head | first message of the recent fraction |
-| Recent N turns | head | first user message of the (M − N + 1)ᵗʰ turn |
-
-Swapping strategies is a question of which pointer values get written, not of storage shape — the host ships one replacement mechanism and applies it uniformly.
+The output of pre-trim is what actually goes to the summarization call. The strategy's preservation rule applies to the *original* timeline (which messages survive verbatim into the post-compaction state), not to what the summarizer sees.
 
 ## Triggers
 
@@ -98,17 +85,33 @@ Three trigger patterns are observed:
 
 Implementations may use any combination of the three.
 
+## The shared shape
+
+Every strategy reduces to the same two artifacts the host stores: a generated **summary message**, and a **preserved-from pointer** marking where the preserved messages begin on the original timeline. On the next turn, a history loader splices them.
+
+| Strategy | Preserved-from pointer | Summary placement |
+|---|---|---|
+| Preserve user messages | first kept user message | after preserved messages (at the cut-off) |
+| Preserve recent token fraction | first message of the recent fraction | before preserved messages (synthetic preface) |
+| Preserve recent turns | first user message of the (M − N + 1)ᵗʰ turn | after preserved messages (at the cut-off) |
+
+Two of three place the summary at the cut-off in chronological order — the natural fit, since the summary is created at the compaction event, which on the timeline is later than every message it summarizes. Recent-token-fraction discards that chronology and relocates the summary to be the conversation's opener.
+
+Swapping strategies is a question of which pointer values get written, not of storage shape — the host ships one replacement mechanism and applies it uniformly.
+
 ## The unified algorithm
 
 First, the types in play:
 
 ```python
 # A Message is the host's existing per-turn record. Every Message has an
-# `id`. Each carries a role ∈ {user, assistant, tool} and a content payload.
+# `id`, a role ∈ {user, assistant, tool}, and a content payload.
 Message = (id, role, content)
 
-# Where the summary sits relative to the preserved tail.
-Position = HEAD | TAIL | ALONE
+# Where the summary lands on the post-compaction timeline.
+#   AT_CUTOFF — summary follows the preserved messages (chronological)
+#   AS_OPENER — summary precedes the preserved messages (synthetic preface)
+Placement = AT_CUTOFF | AS_OPENER
 
 # A Strategy is a 4-tuple bundling everything that varies across algorithms.
 # All four functions are pure: they take history (and a parameter) and
@@ -116,16 +119,16 @@ Position = HEAD | TAIL | ALONE
 Strategy = (
     pre_trim:  (history: [Message], context_limit: int) -> [Message],
     prompt:    str,                                        # system prompt for summarization
-    preserve:  (history: [Message]) -> [Message],          # the verbatim tail
-    position:  Position,
+    preserve:  (history: [Message]) -> [Message],          # the verbatim survivors
+    placement: Placement,
 )
 
 # What compact() returns to the caller. The host writes these three
 # fields onto the session row; nothing else needs to change in storage.
 CompactResult = (
     summary:         Message,         # the new summary message
-    preserved_from:  id | None,       # first id in preserved_tail, or None for ALONE
-    position:        Position,
+    preserved_from:  id,              # first id in the preserved set
+    placement:       Placement,
 )
 ```
 
@@ -140,40 +143,40 @@ def compact(history, strategy, lm, context_limit) -> CompactResult:
     # 2. Summarize: produce one new Message.
     summary = lm.summarize(strategy.prompt, summarizer_input)
 
-    # 3. Pick which originals survive verbatim.
-    preserved_tail = strategy.preserve(history)
+    # 3. Pick which originals survive the cut.
+    preserved = strategy.preserve(history)
 
     # 4. Hand back the artifacts the host needs to persist.
     return CompactResult(
         summary        = summary,
-        preserved_from = preserved_tail[0].id if preserved_tail else None,
-        position       = strategy.position,
+        preserved_from = preserved[0].id,
+        placement      = strategy.placement,
     )
 ```
 
-The four canonical strategies are just different fillings of the 4-tuple. The function names below are the operations defined in each strategy's section earlier in this post:
+The three canonical strategies are just different fillings of the 4-tuple. The function names below are the operations defined in each strategy's section earlier in this post:
 
 ```python
-# Strategy(pre_trim,                prompt,                 preserve,                       position)
-ReplaceAll       = Strategy(noop_or_drop_oldest, handoff_prompt,        empty,                          ALONE)
-PreserveUser     = Strategy(drop_agent_items,    handoff_prompt,        top_user_msgs_within_budget,    TAIL)
-PreserveFrac(p)  = Strategy(truncate_tool_outs,  state_snapshot_prompt, tail_after_user_split(p),       HEAD)
-PreserveTurns(N) = Strategy(prune_old_tool_outs, state_snapshot_prompt, last_N_turns_within_budget(N),  HEAD)
+# Strategy(pre_trim,                prompt,                 preserve,                       placement)
+PreserveUser     = Strategy(drop_agent_items,    handoff_prompt,        top_user_msgs_within_budget,    AT_CUTOFF)
+PreserveFrac(p)  = Strategy(truncate_tool_outs,  state_snapshot_prompt, tail_after_user_split(p),       AS_OPENER)
+PreserveTurns(N) = Strategy(prune_old_tool_outs, state_snapshot_prompt, last_N_turns_within_budget(N),  AT_CUTOFF)
 ```
 
-On each subsequent turn the loader reads the persisted result and reconstructs what the LM sees from it plus the full message log:
+The loader runs on each subsequent turn. Given the persisted result and the full message log, it reconstructs what the LM sees:
 
 ```python
-# `index_of(id, msgs)` is the position of the message with that id in msgs.
+# `index_of(id, msgs)` returns the position of the message with that id.
+# `ack` is the synthetic assistant acknowledgement used by AS_OPENER hosts
+#  (e.g. "Got it. Thanks for the additional context!").
 def lm_history(result: CompactResult | None, all_messages: [Message]) -> [Message]:
-    if result is None:                                  # session never compacted
+    if result is None:                                   # session never compacted
         return all_messages
-    if result.preserved_from is None:                   # ALONE — replace all
-        return [result.summary]
-    tail = all_messages[index_of(result.preserved_from, all_messages):]
-    if result.position == HEAD:  return [result.summary, *tail]
-    else:                        return [*tail, result.summary]   # TAIL
+    preserved = all_messages[index_of(result.preserved_from, all_messages):]
+    if result.placement == AT_CUTOFF:
+        return [*preserved, result.summary]
+    else:                                                # AS_OPENER
+        return [result.summary, ack, *preserved]
 ```
 
 Triggering — deciding *when* `compact()` runs — is a separate predicate over the session's token usage and any explicit user signal, and is orthogonal to which strategy runs.
-
