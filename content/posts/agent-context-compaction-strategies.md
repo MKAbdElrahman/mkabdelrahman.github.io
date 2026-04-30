@@ -75,12 +75,18 @@ The output of pre-trim is what actually goes to the summarization call. The stra
 
 ## The shared shape
 
-Each strategy produces a new history that's some interleaving of two things: a generated summary message and zero or more verbatim messages from the original history. The strategy decides:
+Every strategy reduces to two artifacts the host stores: a generated **summary message**, and an optional **preserved-from pointer** identifying where the preserved tail begins in the original message list. On the next turn, a history loader splices them back together.
 
-- *what* gets preserved (nothing / user-only / recent-token-fraction / recent-N-turns)
-- *where* the summary sits relative to the preserved messages (head, tail, or alone)
+Per strategy, those artifacts look like:
 
-A host implementing strategy selection ships a single replacement mechanism: store the summary, record which original message IDs (if any) form the preserved tail and where they sit relative to the summary, and have the message-history loader splice them back together on the next turn. The strategy decides what's preserved; the host applies it uniformly.
+| Strategy | Summary position | Preserved-from pointer |
+|---|---|---|
+| Replace all | alone — no tail | none |
+| User messages | tail (after the kept user messages) | first kept user message |
+| Recent token fraction | head | first message of the recent fraction |
+| Recent N turns | head | first user message of the (M − N + 1)ᵗʰ turn |
+
+Swapping strategies is a question of which pointer values get written, not of storage shape — the host ships one replacement mechanism and applies it uniformly.
 
 ## Triggers
 
@@ -92,6 +98,82 @@ Three trigger patterns are observed:
 
 Implementations may use any combination of the three.
 
-## The shape
+## The unified algorithm
 
-At the implementation level all four strategies reduce to the same pair of artifacts: a generated summary message, and an optional pointer identifying where the preserved tail begins in the original message list. The history loader splices them on the next turn. Swapping between strategies is a question of which pointer values the strategy produces, not of the storage shape.
+First, the types in play:
+
+```python
+# A Message is the host's existing per-turn record. Every Message has an
+# `id`. Each carries a role ∈ {user, assistant, tool} and a content payload.
+Message = (id, role, content)
+
+# Where the summary sits relative to the preserved tail.
+Position = HEAD | TAIL | ALONE
+
+# A Strategy is a 4-tuple bundling everything that varies across algorithms.
+# All four functions are pure: they take history (and a parameter) and
+# return a value; nothing is persisted from inside them.
+Strategy = (
+    pre_trim:  (history: [Message], context_limit: int) -> [Message],
+    prompt:    str,                                        # system prompt for summarization
+    preserve:  (history: [Message]) -> [Message],          # the verbatim tail
+    position:  Position,
+)
+
+# What compact() returns to the caller. The host writes these three
+# fields onto the session row; nothing else needs to change in storage.
+CompactResult = (
+    summary:         Message,         # the new summary message
+    preserved_from:  id | None,       # first id in preserved_tail, or None for ALONE
+    position:        Position,
+)
+```
+
+The pipeline is one function, parameterised by the strategy:
+
+```python
+# `lm.summarize(system_prompt, history) -> Message` is the host's LM client.
+def compact(history, strategy, lm, context_limit) -> CompactResult:
+    # 1. Pre-trim: shrink the summarizer's input so the call itself fits.
+    summarizer_input = strategy.pre_trim(history, context_limit)
+
+    # 2. Summarize: produce one new Message.
+    summary = lm.summarize(strategy.prompt, summarizer_input)
+
+    # 3. Pick which originals survive verbatim.
+    preserved_tail = strategy.preserve(history)
+
+    # 4. Hand back the artifacts the host needs to persist.
+    return CompactResult(
+        summary        = summary,
+        preserved_from = preserved_tail[0].id if preserved_tail else None,
+        position       = strategy.position,
+    )
+```
+
+The four canonical strategies are just different fillings of the 4-tuple. The function names below are the operations defined in each strategy's section earlier in this post:
+
+```python
+# Strategy(pre_trim,                prompt,                 preserve,                       position)
+ReplaceAll       = Strategy(noop_or_drop_oldest, handoff_prompt,        empty,                          ALONE)
+PreserveUser     = Strategy(drop_agent_items,    handoff_prompt,        top_user_msgs_within_budget,    TAIL)
+PreserveFrac(p)  = Strategy(truncate_tool_outs,  state_snapshot_prompt, tail_after_user_split(p),       HEAD)
+PreserveTurns(N) = Strategy(prune_old_tool_outs, state_snapshot_prompt, last_N_turns_within_budget(N),  HEAD)
+```
+
+On each subsequent turn the loader reads the persisted result and reconstructs what the LM sees from it plus the full message log:
+
+```python
+# `index_of(id, msgs)` is the position of the message with that id in msgs.
+def lm_history(result: CompactResult | None, all_messages: [Message]) -> [Message]:
+    if result is None:                                  # session never compacted
+        return all_messages
+    if result.preserved_from is None:                   # ALONE — replace all
+        return [result.summary]
+    tail = all_messages[index_of(result.preserved_from, all_messages):]
+    if result.position == HEAD:  return [result.summary, *tail]
+    else:                        return [*tail, result.summary]   # TAIL
+```
+
+Triggering — deciding *when* `compact()` runs — is a separate predicate over the session's token usage and any explicit user signal, and is orthogonal to which strategy runs.
+
