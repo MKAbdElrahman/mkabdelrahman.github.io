@@ -48,13 +48,10 @@ The summary sits at the split point — chronologically immediately after the la
 
 ## When to choose which
 
-Strategy choice is application-specific. Two judgments about the workload do most of the work:
+The choice depends on two properties of the workload:
 
-**Are user and agent messages equally important?** If the user's intent is the durable record and the agent's responses can be reproduced from those prompts, role asymmetry is real and **Strategy 1** fits — it keeps every user message as-is and lets the summary absorb everything else. If both sides carry equal weight — agent reasoning, tool outputs, and the model's earlier choices feed into later turns as much as the user's prompts do — **Strategy 2** and **Strategy 3** are the right shape, since both preserve recent content regardless of role.
-
-**How much do recent messages drive the next decision?** If the model needs the last few exchanges in full to answer well — "what did the model just suggest?", "did the last tool call succeed?" — recency matters a lot, and the choice is between Strategy 2 (token-budgeted recency, snapped to a user boundary) and Strategy 3 (whole-turn recency, never split mid-tool-call). If recency matters less than the cumulative trail of decisions, Strategy 1 is fine — the user's prompts capture the trajectory, and the summary captures the agent's exploration.
-
-The two factors interact. An agent doing long-form research where the user mostly says "continue" or "look at X" gets little signal from preserved user messages — the recent agent reasoning is the dense signal, so Strategy 2 or 3 is preferable. A coding agent where the user explicitly states each goal benefits from Strategy 1 — the goals are the structure, the agent's exploration between them can be lossy. There is no universal answer.
+- **Role asymmetry.** Are user prompts the durable record (with agent output reproducible from them), or do both sides feed later turns equally?
+- **Recency.** Do the last few exchanges drive the next decision, or does the cumulative trail of decisions matter more?
 
 ## A common pre-trim step
 
