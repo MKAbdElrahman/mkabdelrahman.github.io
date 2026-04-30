@@ -67,13 +67,21 @@ The output of pre-trim is what actually goes to the summarization call. The stra
 
 ## Triggers
 
-Three trigger patterns are observed:
+Triggers fall into three kinds:
 
-- **Proactive token threshold.** When estimated context usage reaches a configured fraction of the model's window, run compaction before the next LM call. Observed thresholds include 50% of the window; "remaining tokens fall below a fixed buffer" (e.g., 20K of headroom for windows larger than 200K, or 20% of the window for smaller ones); and a per-model auto-compact token limit.
-- **Reactive overflow.** Compaction kicks in when a model call has already returned a context-window-exceeded error, with the next attempt running against the compacted history.
-- **Manual / explicit.** Compaction fires when explicitly requested via a parameter or user action.
+- **Budget trigger.** Fires when a measurement crosses a threshold (e.g. `total_tokens >= limit`). Common forms: a fixed fraction of the window (50% is widely seen); a fixed-size headroom buffer (20K of slack for windows over 200K, 20% for smaller ones); a per-model auto-compact limit. Reactive overflow — running compaction after a context-window-exceeded error — is a budget trigger that fired late.
+- **Structural trigger.** Fires on a change to the shape or contents of the conversation: "a new message arrived," "a tool produced output," "compaction just completed," "the user invoked compaction." No measurement — the fact that it happened is the trigger. Used for eager work that keeps pressure from building (e.g. distilling a fresh tool output so it's already small by the time a budget trigger fires) and for explicit user-invoked compaction.
+- **Temporal trigger.** Fires on a clock — "N milliseconds have elapsed since the last fire." No measurement, no event, just time. Used for periodic maintenance with no natural event hook (cache GC, idle cleanup, polling-style work).
 
-Implementations may use any combination of the three.
+| Trigger kind | Question | Example |
+|---|---|---|
+| Budget | "Have we exceeded a limit?" | `total >= 80_000` |
+| Structural | "Did this thing happen?" | `on(new_message)` |
+| Temporal | "Has time elapsed?" | `every(5 minutes)` |
+
+Triggers compose. An inline auto-compact in practice is **budget AND structural**: `total >= auto_compact_limit && (model_needs_follow_up || has_pending_input)`. The structural predicate guards against compacting at the wrong moment — e.g. just as a turn was about to end naturally.
+
+Most non-trivial systems mix all three: a budget trigger to react to pressure, structural triggers to do work eagerly so pressure builds slower, and temporal triggers for housekeeping that nothing else hooks.
 
 ## The shared shape
 
@@ -98,7 +106,7 @@ Swapping strategies is a question of which pointer value gets written, not of st
 | **tail-start pointer** | The stored marker (a message ID or array index) identifying where the tail begins on the original timeline. One value gets written per compaction. |
 | **turn** | One user message plus every agent-generated item produced in response, up to the next user message. |
 | **agent-generated item** | Any conversation item not authored by the user: assistant text, tool calls, tool outputs, reasoning traces. |
-| **trigger** | The condition that initiates compaction — a proactive token threshold, a reactive context-window-exceeded error, or a manual user request. |
+| **trigger** | The condition that initiates compaction. Three kinds: **budget** (a measurement crosses a threshold), **structural** (an event happened), **temporal** (time elapsed). |
 | **pre-trim** | Token-reduction applied to the input of the summarization call itself so the summarizer doesn't overflow. Distinct from the strategy's preservation rule, which describes the post-compaction timeline. |
 | **host** | The runtime that owns the conversation state and runs compaction (the agent process or session manager). |
 
