@@ -2,18 +2,10 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Authors on Mohamed Abdelrahman</title>
-    <link>http://localhost:1313/authors/</link>
+    <link>https://mkabdelrahman.github.io/authors/</link>
     <description>Recent content in Authors on Mohamed Abdelrahman</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 21 Nov 2023 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/authors/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Mohamed Kamal</title>
-      <link>http://localhost:1313/authors/mohamed-kamal/</link>
-      <pubDate>Tue, 21 Nov 2023 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/authors/mohamed-kamal/</guid>
-      <description></description>
-    </item>
+    <atom:link href="https://mkabdelrahman.github.io/authors/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

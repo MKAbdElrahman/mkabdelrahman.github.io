@@ -2,87 +2,66 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Mohamed Abdelrahman</title>
-    <link>http://localhost:1313/tags/</link>
+    <link>https://mkabdelrahman.github.io/tags/</link>
     <description>Recent content in Tags on Mohamed Abdelrahman</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 13 Jan 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 04 May 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://mkabdelrahman.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Agents</title>
+      <link>https://mkabdelrahman.github.io/tags/agents/</link>
+      <pubDate>Mon, 04 May 2026 00:00:00 +0000</pubDate>
+      <guid>https://mkabdelrahman.github.io/tags/agents/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Bubble-Tea</title>
+      <link>https://mkabdelrahman.github.io/tags/bubble-tea/</link>
+      <pubDate>Mon, 04 May 2026 00:00:00 +0000</pubDate>
+      <guid>https://mkabdelrahman.github.io/tags/bubble-tea/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Go</title>
-      <link>http://localhost:1313/tags/go/</link>
-      <pubDate>Mon, 13 Jan 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/go/</guid>
+      <link>https://mkabdelrahman.github.io/tags/go/</link>
+      <pubDate>Mon, 04 May 2026 00:00:00 +0000</pubDate>
+      <guid>https://mkabdelrahman.github.io/tags/go/</guid>
       <description></description>
     </item>
     <item>
-      <title>Resiliency Patterns</title>
-      <link>http://localhost:1313/tags/resiliency-patterns/</link>
-      <pubDate>Wed, 06 Nov 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/resiliency-patterns/</guid>
+      <title>Learning</title>
+      <link>https://mkabdelrahman.github.io/tags/learning/</link>
+      <pubDate>Mon, 04 May 2026 00:00:00 +0000</pubDate>
+      <guid>https://mkabdelrahman.github.io/tags/learning/</guid>
       <description></description>
     </item>
     <item>
-      <title>Architecture</title>
-      <link>http://localhost:1313/tags/architecture/</link>
-      <pubDate>Mon, 04 Nov 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/architecture/</guid>
+      <title>Llm</title>
+      <link>https://mkabdelrahman.github.io/tags/llm/</link>
+      <pubDate>Mon, 04 May 2026 00:00:00 +0000</pubDate>
+      <guid>https://mkabdelrahman.github.io/tags/llm/</guid>
       <description></description>
     </item>
     <item>
-      <title>Software Architecture</title>
-      <link>http://localhost:1313/tags/software-architecture/</link>
-      <pubDate>Tue, 09 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/software-architecture/</guid>
+      <title>Tui</title>
+      <link>https://mkabdelrahman.github.io/tags/tui/</link>
+      <pubDate>Mon, 04 May 2026 00:00:00 +0000</pubDate>
+      <guid>https://mkabdelrahman.github.io/tags/tui/</guid>
       <description></description>
     </item>
     <item>
-      <title>Event-Driven Architecture</title>
-      <link>http://localhost:1313/tags/event-driven-architecture/</link>
-      <pubDate>Thu, 02 May 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/event-driven-architecture/</guid>
+      <title>Context-Management</title>
+      <link>https://mkabdelrahman.github.io/tags/context-management/</link>
+      <pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://mkabdelrahman.github.io/tags/context-management/</guid>
       <description></description>
     </item>
     <item>
-      <title>Distrubuted Systems</title>
-      <link>http://localhost:1313/tags/distrubuted-systems/</link>
-      <pubDate>Sun, 24 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/distrubuted-systems/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Architecture Style</title>
-      <link>http://localhost:1313/tags/architecture-style/</link>
-      <pubDate>Thu, 14 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/architecture-style/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Microservices</title>
-      <link>http://localhost:1313/tags/microservices/</link>
-      <pubDate>Wed, 21 Feb 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/microservices/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Concurrecny</title>
-      <link>http://localhost:1313/tags/concurrecny/</link>
-      <pubDate>Tue, 21 Nov 2023 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/concurrecny/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Context</title>
-      <link>http://localhost:1313/tags/context/</link>
-      <pubDate>Tue, 21 Nov 2023 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/context/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Conf</title>
-      <link>http://localhost:1313/tags/conf/</link>
-      <pubDate>Wed, 25 Oct 2023 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/conf/</guid>
+      <title>Summarization</title>
+      <link>https://mkabdelrahman.github.io/tags/summarization/</link>
+      <pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://mkabdelrahman.github.io/tags/summarization/</guid>
       <description></description>
     </item>
   </channel>

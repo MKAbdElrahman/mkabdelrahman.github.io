@@ -2,94 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on Mohamed Abdelrahman</title>
-    <link>http://localhost:1313/categories/</link>
+    <link>https://mkabdelrahman.github.io/categories/</link>
     <description>Recent content in Categories on Mohamed Abdelrahman</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 09 Jul 2024 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Microservices</title>
-      <link>http://localhost:1313/categories/microservices/</link>
-      <pubDate>Tue, 09 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/microservices/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Saga</title>
-      <link>http://localhost:1313/categories/saga/</link>
-      <pubDate>Tue, 09 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/saga/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Software Architecture</title>
-      <link>http://localhost:1313/categories/software-architecture/</link>
-      <pubDate>Tue, 09 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/software-architecture/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Caching</title>
-      <link>http://localhost:1313/categories/caching/</link>
-      <pubDate>Thu, 27 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/caching/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Software Design</title>
-      <link>http://localhost:1313/categories/software-design/</link>
-      <pubDate>Mon, 20 May 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/software-design/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Observability</title>
-      <link>http://localhost:1313/categories/observability/</link>
-      <pubDate>Thu, 16 May 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/observability/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Coding Best Practices</title>
-      <link>http://localhost:1313/categories/coding-best-practices/</link>
-      <pubDate>Mon, 13 May 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/coding-best-practices/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Go</title>
-      <link>http://localhost:1313/categories/go/</link>
-      <pubDate>Mon, 13 May 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/go/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Distrubuted Storage</title>
-      <link>http://localhost:1313/categories/distrubuted-storage/</link>
-      <pubDate>Sun, 24 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/distrubuted-storage/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Kafka</title>
-      <link>http://localhost:1313/categories/kafka/</link>
-      <pubDate>Thu, 14 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/kafka/</guid>
-      <description></description>
-    </item>
+    <lastBuildDate>Mon, 04 May 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://mkabdelrahman.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Technology</title>
-      <link>http://localhost:1313/categories/technology/</link>
-      <pubDate>Thu, 07 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/technology/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Concurrency</title>
-      <link>http://localhost:1313/categories/concurrency/</link>
-      <pubDate>Tue, 21 Nov 2023 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/concurrency/</guid>
+      <link>https://mkabdelrahman.github.io/categories/technology/</link>
+      <pubDate>Mon, 04 May 2026 00:00:00 +0000</pubDate>
+      <guid>https://mkabdelrahman.github.io/categories/technology/</guid>
       <description></description>
     </item>
   </channel>

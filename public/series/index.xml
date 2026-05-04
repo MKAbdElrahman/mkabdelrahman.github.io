@@ -2,18 +2,10 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Series on Mohamed Abdelrahman</title>
-    <link>http://localhost:1313/series/</link>
+    <link>https://mkabdelrahman.github.io/series/</link>
     <description>Recent content in Series on Mohamed Abdelrahman</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 21 Nov 2023 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/series/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Go Context Package</title>
-      <link>http://localhost:1313/series/go-context-package/</link>
-      <pubDate>Tue, 21 Nov 2023 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/series/go-context-package/</guid>
-      <description></description>
-    </item>
+    <atom:link href="https://mkabdelrahman.github.io/series/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Uml on Mohamed Abdelrahman</title>
+    <link>http://localhost:1313/tags/uml/</link>
+    <description>Recent content in Uml on Mohamed Abdelrahman</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 25 Apr 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/uml/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Modeling an Agent Loop as a UML Behavioral State Machine</title>
+      <link>http://localhost:1313/posts/agent-state-machine/</link>
+      <pubDate>Sat, 25 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/agent-state-machine/</guid>
+      <description>&lt;h2 id=&#34;why-a-behavioral-state-machine&#34;&gt;&#xA;  Why a Behavioral State Machine?&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#why-a-behavioral-state-machine&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;Most agent loops in the wild are written as ad-hoc &lt;code&gt;while&lt;/code&gt; loops with a pile of boolean flags: &lt;code&gt;is_streaming&lt;/code&gt;, &lt;code&gt;tool_pending&lt;/code&gt;, &lt;code&gt;awaiting_user&lt;/code&gt;, &lt;code&gt;cancelled&lt;/code&gt;. The flags drift, the edge cases multiply, and &amp;ldquo;what should happen if a &lt;code&gt;cancel&lt;/code&gt; arrives mid-tool-call?&amp;rdquo; becomes a code-review argument.&lt;/p&gt;&#xA;&lt;p&gt;A &lt;strong&gt;UML behavioral state machine&lt;/strong&gt; removes the ambiguity. UML 2 gives us a precise vocabulary — &lt;em&gt;simple state&lt;/em&gt;, &lt;em&gt;composite state&lt;/em&gt;, &lt;em&gt;pseudostate&lt;/em&gt;, &lt;em&gt;transition&lt;/em&gt;, &lt;em&gt;trigger&lt;/em&gt;, &lt;em&gt;guard&lt;/em&gt;, &lt;em&gt;effect&lt;/em&gt;, &lt;em&gt;entry behavior&lt;/em&gt;, &lt;em&gt;internal transition&lt;/em&gt;, &lt;em&gt;extended state&lt;/em&gt; — and a well-defined run-to-completion semantics for processing events. Each rule lives in exactly one place, and the diagram &lt;strong&gt;is&lt;/strong&gt; the specification.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

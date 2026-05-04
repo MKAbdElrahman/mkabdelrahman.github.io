@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tui on Mohamed Abdelrahman</title>
+    <link>https://mkabdelrahman.github.io/tags/tui/</link>
+    <description>Recent content in Tui on Mohamed Abdelrahman</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 04 May 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://mkabdelrahman.github.io/tags/tui/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>An AI tutor that watches every keystroke</title>
+      <link>https://mkabdelrahman.github.io/posts/lernen-ai-tutor-watching-keystrokes/</link>
+      <pubDate>Mon, 04 May 2026 00:00:00 +0000</pubDate>
+      <guid>https://mkabdelrahman.github.io/posts/lernen-ai-tutor-watching-keystrokes/</guid>
+      <description>&lt;h2 id=&#34;a-flashcard-app-but-the-ai-is-in-the-loop&#34;&gt;&#xA;  A flashcard app, but the AI is in the loop&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#a-flashcard-app-but-the-ai-is-in-the-loop&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;Most &amp;ldquo;AI study buddies&amp;rdquo; are chatbots glued to the side of a flashcard app. You study, then you ask a question, then the model answers from cold context. The model has no idea you just got the same word wrong twice and replayed the audio four times.&lt;/p&gt;&#xA;&lt;p&gt;I wanted to flip that. The model should see every action — reveals, replays, grades, notes — and react inside the study loop, not after it.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

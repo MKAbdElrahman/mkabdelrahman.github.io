@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 290" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="axis-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <rect width="720" height="290" fill="#fafafa"/>
+
+  <text x="360" y="28" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">Strategy 4: Preserve recent turns</text>
+
+  <!-- Time axis -->
+  <text x="60" y="52" font-size="10" font-weight="600" fill="#94a3b8" letter-spacing="0.5">past</text>
+  <line x1="92" y1="48" x2="652" y2="48" stroke="#cbd5e1" stroke-width="1" marker-end="url(#axis-arrow)"/>
+  <text x="660" y="52" font-size="10" font-weight="600" fill="#94a3b8" letter-spacing="0.5">now</text>
+
+  <!-- BEFORE -->
+  <text x="60" y="80" font-size="11" fill="#64748b">Before — context window full</text>
+  <rect x="60" y="88" width="600" height="36" rx="6" stroke="#cbd5e1" stroke-width="1" fill="white"/>
+  <g transform="translate(60, 88)" clip-path="inset(0 round 6)">
+    <rect x="0"   y="0" width="30"  height="36" fill="#3b82f6"/>
+    <rect x="30"  y="0" width="70"  height="36" fill="#94a3b8"/>
+    <rect x="100" y="0" width="20"  height="36" fill="#10b981"/>
+    <rect x="120" y="0" width="30"  height="36" fill="#3b82f6"/>
+    <rect x="150" y="0" width="70"  height="36" fill="#94a3b8"/>
+    <rect x="220" y="0" width="20"  height="36" fill="#10b981"/>
+    <rect x="240" y="0" width="30"  height="36" fill="#3b82f6"/>
+    <rect x="270" y="0" width="70"  height="36" fill="#94a3b8"/>
+    <rect x="340" y="0" width="20"  height="36" fill="#10b981"/>
+    <rect x="360" y="0" width="30"  height="36" fill="#3b82f6"/>
+    <rect x="390" y="0" width="70"  height="36" fill="#94a3b8"/>
+    <rect x="460" y="0" width="20"  height="36" fill="#10b981"/>
+    <rect x="480" y="0" width="30"  height="36" fill="#3b82f6"/>
+    <rect x="510" y="0" width="70"  height="36" fill="#94a3b8"/>
+    <rect x="580" y="0" width="20"  height="36" fill="#10b981"/>
+  </g>
+  <g font-size="10" fill="#64748b" text-anchor="middle">
+    <text x="120" y="140">Turn 1</text>
+    <text x="240" y="140">Turn 2</text>
+    <text x="360" y="140">Turn 3</text>
+    <text x="480" y="140">Turn 4</text>
+    <text x="600" y="140">Turn 5</text>
+  </g>
+  <!-- cut-off at turn boundary between Turn 3 and Turn 4 (last N=2 preserved) -->
+  <line x1="420" y1="84" x2="420" y2="128" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <text x="420" y="158" text-anchor="middle" font-size="9" font-weight="600" fill="#dc2626">cut-off (last N=2 turns)</text>
+
+  <!-- arrow -->
+  <line x1="360" y1="180" x2="360" y2="208" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="372" y="198" font-size="10" fill="#475569" font-style="italic">compact</text>
+
+  <!-- AFTER: Turn 4 + Turn 5 + S at the cut-off -->
+  <text x="60" y="228" font-size="11" fill="#64748b">After — last 2 turns preserved in chrono order, summary at the cut-off</text>
+  <rect x="60" y="236" width="600" height="36" rx="6" stroke="#cbd5e1" stroke-width="1" fill="white"/>
+  <g transform="translate(60, 236)" clip-path="inset(0 round 6)">
+    <!-- Turn 4 -->
+    <rect x="0"   y="0" width="30" height="36" fill="#3b82f6"/>
+    <rect x="30"  y="0" width="70" height="36" fill="#94a3b8"/>
+    <rect x="100" y="0" width="20" height="36" fill="#10b981"/>
+    <!-- Turn 5 -->
+    <rect x="120" y="0" width="30" height="36" fill="#3b82f6"/>
+    <rect x="150" y="0" width="70" height="36" fill="#94a3b8"/>
+    <rect x="220" y="0" width="20" height="36" fill="#10b981"/>
+    <!-- Summary at the cut-off -->
+    <rect x="248" y="0" width="60" height="36" fill="#f59e0b"/>
+  </g>
+  <text x="278" y="258" text-anchor="middle" font-size="11" font-weight="700" fill="white">S</text>
+  <text x="500" y="258" text-anchor="middle" font-size="10" fill="#94a3b8" font-style="italic">free for new turns →</text>
+
+  <g stroke="#94a3b8" stroke-width="1" fill="none">
+    <path d="M 60 280 L 60 284 L 179 284 L 179 280"/>
+    <path d="M 189 280 L 189 284 L 308 284 L 308 280"/>
+    <path d="M 318 280 L 318 284 L 368 284 L 368 280"/>
+  </g>
+</svg>

@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <title>
+  Modeling an Agent Loop as a UML Behavioral State Machine · Mohamed Abdelrahman
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Mohamed Abdelrahman">
+<meta name="description" content="An LLM agent loop expressed as a UML 2 behavioral state machine — pseudostates, composite states, guarded transitions, internal transitions, entry behaviors, and extended state.">
+<meta name="keywords" content="blog,developer,personal">
+<meta name="fediverse:creator" content="" />
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Modeling an Agent Loop as a UML Behavioral State Machine">
+  <meta name="twitter:description" content="An LLM agent loop expressed as a UML 2 behavioral state machine — pseudostates, composite states, guarded transitions, internal transitions, entry behaviors, and extended state.">
+
+<meta property="og:url" content="http://localhost:1313/posts/agent-state-machine/">
+  <meta property="og:site_name" content="Mohamed Abdelrahman">
+  <meta property="og:title" content="Modeling an Agent Loop as a UML Behavioral State Machine">
+  <meta property="og:description" content="An LLM agent loop expressed as a UML 2 behavioral state machine — pseudostates, composite states, guarded transitions, internal transitions, entry behaviors, and extended state.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-04-25T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-04-25T00:00:00+00:00">
+    <meta property="article:tag" content="Agents">
+    <meta property="article:tag" content="Uml">
+    <meta property="article:tag" content="State-Machines">
+    <meta property="article:tag" content="Llm">
+
+
+
+
+<link rel="canonical" href="http://localhost:1313/posts/agent-state-machine/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.css" media="screen">
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="http://localhost:1313/">
+      Mohamed Abdelrahman
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/contact/">Contact me</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://localhost:1313/posts/agent-state-machine/">
+              Modeling an Agent Loop as a UML Behavioral State Machine
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2026-04-25T00:00:00Z">
+                April 25, 2026
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              8-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
+    <a href="/categories/technology/">Technology</a></div>
+
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/agents/">Agents</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/uml/">Uml</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/state-machines/">State-Machines</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/llm/">Llm</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <h2 id="why-a-behavioral-state-machine">
+  Why a Behavioral State Machine?
+  <a class="heading-link" href="#why-a-behavioral-state-machine">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Most agent loops in the wild are written as ad-hoc <code>while</code> loops with a pile of boolean flags: <code>is_streaming</code>, <code>tool_pending</code>, <code>awaiting_user</code>, <code>cancelled</code>. The flags drift, the edge cases multiply, and &ldquo;what should happen if a <code>cancel</code> arrives mid-tool-call?&rdquo; becomes a code-review argument.</p>
+<p>A <strong>UML behavioral state machine</strong> removes the ambiguity. UML 2 gives us a precise vocabulary — <em>simple state</em>, <em>composite state</em>, <em>pseudostate</em>, <em>transition</em>, <em>trigger</em>, <em>guard</em>, <em>effect</em>, <em>entry behavior</em>, <em>internal transition</em>, <em>extended state</em> — and a well-defined run-to-completion semantics for processing events. Each rule lives in exactly one place, and the diagram <strong>is</strong> the specification.</p>
+<p>This post models a typical LLM agent — text input, streaming output, tool calls, tool execution, human-in-the-loop confirmation, cancellation, and final outcomes — using UML conventions throughout. The runnable form is W3C SCXML, which is essentially UML state machines serialized as XML.</p>
+<h2 id="the-state-model">
+  The State Model
+  <a class="heading-link" href="#the-state-model">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<h3 id="pseudostates-and-final-states">
+  Pseudostates and Final States
+  <a class="heading-link" href="#pseudostates-and-final-states">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>The diagram has one <strong>initial pseudostate</strong> (the filled circle) that designates the default substate of the top-level region. Three <strong>final states</strong> — <code>terminated</code>, <code>failed</code>, <code>cancelled</code> — represent terminal completions of the state machine, each carrying its own outcome semantics.</p>
+<h3 id="composite-state">
+  Composite State
+  <a class="heading-link" href="#composite-state">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>The state <code>active</code> is a <strong>composite state</strong>: it contains a region with five <strong>simple substates</strong>. Behavior shared by every substate (here, the response to a <code>cancel</code> trigger) is hoisted onto the composite, exploiting UML&rsquo;s transition-priority rule that an outer transition fires when no inner transition is enabled. This is the UML equivalent of &ldquo;handle it once, inherit everywhere.&rdquo;</p>
+<h3 id="simple-states">
+  Simple States
+  <a class="heading-link" href="#simple-states">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<table>
+  <thead>
+      <tr>
+          <th>State</th>
+          <th>Role</th>
+          <th>Entry Behavior</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>idle</code></td>
+          <td>ready</td>
+          <td>—</td>
+      </tr>
+      <tr>
+          <td><code>awaiting_model</code></td>
+          <td>active</td>
+          <td><code>llm.complete</code></td>
+      </tr>
+      <tr>
+          <td><code>executing_tool</code></td>
+          <td>active</td>
+          <td><code>tool.invoke</code></td>
+      </tr>
+      <tr>
+          <td><code>awaiting_human</code></td>
+          <td>waiting</td>
+          <td><code>hil.ask</code></td>
+      </tr>
+      <tr>
+          <td><code>done</code></td>
+          <td>settled</td>
+          <td>—</td>
+      </tr>
+  </tbody>
+</table>
+<p>Each entry behavior is invoked exactly once per entry, per UML semantics. Exit behaviors are symmetric (omitted here for brevity).</p>
+<h3 id="extended-state">
+  Extended State
+  <a class="heading-link" href="#extended-state">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>UML separates the <strong>state</strong> of the machine (which node is active) from its <strong>extended state</strong> (typed variables that survive across transitions). Four extended-state variables back this machine:</p>
+<pre tabindex="0"><code>pending_tool_calls : Sequence&lt;ToolCall&gt;   // tool calls the model just emitted
+pending_text       : String               // last user/assistant/error text
+messages           : Sequence&lt;Message&gt;    // append-only conversation log
+streaming_chunk    : String               // most recent streamed delta
+</code></pre><p>Transitions read and update extended state via their <strong>effects</strong>.</p>
+<h2 id="the-state-diagram">
+  The State Diagram
+  <a class="heading-link" href="#the-state-diagram">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Transition labels follow the UML notation <code>trigger [guard] / effect</code>. Effects are summarized; full code lives in the SCXML at the end.</p>
+<div class="mermaid">
+stateDiagram-v2
+    direction TB
+
+    classDef ready     fill:#0f2942,stroke:#5b8def,stroke-width:2px,color:#e8f1ff
+    classDef working   fill:#1e3a5f,stroke:#5b8def,stroke-width:2px,color:#e8f1ff
+    classDef paused    fill:#4a3d1f,stroke:#faad14,stroke-width:2px,color:#fff7e6
+    classDef settled   fill:#1f4d2e,stroke:#52c41a,stroke-width:2px,color:#f6ffed
+    classDef finalOk   fill:#0d3d20,stroke:#52c41a,stroke-width:3px,color:#f6ffed
+    classDef finalErr  fill:#5c1a1a,stroke:#ff4d4f,stroke-width:3px,color:#fff1f0
+    classDef finalStop fill:#3a2a4d,stroke:#b37feb,stroke-width:3px,color:#f9f0ff
+
+    [*] --> idle
+
+    state active {
+        idle           --> awaiting_model : user.message / append user msg
+        idle           --> idle           : session.restore / hydrate
+
+        awaiting_model --> awaiting_model : model.text_delta / stream chunk
+        awaiting_model --> done           : model.final / append assistant
+        awaiting_model --> executing_tool : model.tool_use / record calls
+
+        executing_tool --> awaiting_model : tool.result / append outputs
+        executing_tool --> awaiting_model : tool.error / append error
+        executing_tool --> awaiting_human : hil.request
+
+        awaiting_human --> executing_tool : user.response
+
+        done           --> awaiting_model : user.message / append user msg
+    }
+
+    awaiting_model --> failed     : model.error / append error
+    done           --> terminated : session.finish
+    active         --> cancelled  : cancel
+
+    terminated --> [*]
+    failed     --> [*]
+    cancelled  --> [*]
+
+    class idle ready
+    class awaiting_model working
+    class executing_tool working
+    class awaiting_human paused
+    class done settled
+    class terminated finalOk
+    class failed finalErr
+    class cancelled finalStop
+
+</div>
+
+<p>The diagram visualizes self-loops for clarity, but two of them — <code>idle → idle</code> on <code>session.restore</code> and <code>awaiting_model → awaiting_model</code> on <code>model.text_delta</code> — are properly <strong>internal transitions</strong> in UML terms: they fire their effect without triggering exit/entry behaviors. This matters because <code>awaiting_model</code>&rsquo;s entry behavior <code>llm.complete</code> must not run again on every streamed chunk.</p>
+<h2 id="the-run-to-completion-step">
+  The Run-to-Completion Step
+  <a class="heading-link" href="#the-run-to-completion-step">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>UML state machines process one event at a time using a <strong>run-to-completion (RTC) step</strong>:</p>
+<ol>
+<li>Dispatch the next event from the event pool.</li>
+<li>Find the innermost transition whose trigger matches and whose guard is <code>true</code>.</li>
+<li>Execute exit behaviors of states being left, the transition&rsquo;s effect, then entry behaviors of states being entered.</li>
+<li>Settle in the new active configuration before dispatching the next event.</li>
+</ol>
+<p>This is why concurrent <code>cancel</code> and <code>tool.result</code> cannot interleave halfway through a transition&rsquo;s effect — RTC keeps the machine atomically consistent without locks.</p>
+<h2 id="walking-the-happy-path">
+  Walking the Happy Path
+  <a class="heading-link" href="#walking-the-happy-path">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>A turn with one tool call traces a deterministic path through the diagram:</p>
+<ol>
+<li><strong><code>idle</code> &ndash;[<code>user.message</code> / append user msg]&ndash;&gt; <code>awaiting_model</code>.</strong> Exit behavior of <code>idle</code> runs; entry behavior of <code>awaiting_model</code> runs <code>llm.complete</code>.</li>
+<li>The model streams <strong><code>model.text_delta</code></strong> events. Each is an internal transition: <code>streaming_chunk</code> is updated and the <code>hook.stream</code> effect fires, but the active state and its entry behavior are untouched.</li>
+<li>The model emits <strong><code>model.tool_use</code></strong>. The transition to <code>executing_tool</code> records calls into <code>pending_tool_calls</code> and <code>messages</code> (effect), then enters <code>executing_tool</code> and runs <code>tool.invoke</code> (entry).</li>
+<li><strong><code>tool.result</code></strong> transitions back to <code>awaiting_model</code>, appending outputs and clearing <code>pending_tool_calls</code>. Re-entry runs <code>llm.complete</code> so the model can continue with the new context.</li>
+<li>The model emits <strong><code>model.final</code></strong> → transitions to <code>done</code>, with the assistant message saved.</li>
+<li><code>done</code> waits in the active configuration. A new <code>user.message</code> reopens the loop; <code>session.finish</code> produces a completion transition to the final state <code>terminated</code>.</li>
+</ol>
+<h2 id="notable-modeling-choices">
+  Notable Modeling Choices
+  <a class="heading-link" href="#notable-modeling-choices">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>These are the places UML&rsquo;s vocabulary actually pays off:</p>
+<ul>
+<li><strong>Hoisted transition.</strong> <code>cancel</code> is declared on the composite state <code>active</code>. Per UML transition-selection rules, it fires whenever an inner transition is not enabled, so it works as a uniform interrupt over every substate without duplication.</li>
+<li><strong>Guarded transitions.</strong> <code>session.restore</code> is one trigger with five outgoing transitions guarded by <code>[target = 'done']</code>, <code>[target = 'awaiting_human']</code>, <code>[target = 'failed']</code>, <code>[target = 'cancelled']</code>, and the unguarded fallback. This is the standard UML pattern for routing on payload.</li>
+<li><strong>Internal vs. external transitions.</strong> <code>model.text_delta</code> and the unguarded <code>session.restore</code> are internal (no exit/entry rerun). <code>model.final</code> and <code>model.tool_use</code> are external (full exit/effect/entry sequence). The distinction is critical for entry behaviors with side effects like <code>llm.complete</code>.</li>
+<li><strong>Entry behaviors as side-effecting work.</strong> <code>llm.complete</code>, <code>tool.invoke</code>, and <code>hil.ask</code> are entry behaviors, not transition effects, so they&rsquo;re invariant under whichever transition led here. Re-entering <code>awaiting_model</code> from <code>executing_tool</code> triggers a fresh <code>llm.complete</code> automatically.</li>
+<li><strong>Append-only extended state.</strong> Every effect that adds to <code>messages</code> does so by <code>concat</code>, making the conversation log monotonic. <code>pending_tool_calls</code> is cleared on every exit from <code>executing_tool</code>, preserving the invariant that no stale call IDs leak across turns.</li>
+<li><strong>Distinct final states.</strong> <code>terminated</code>, <code>failed</code>, and <code>cancelled</code> are separate UML final states rather than a single &ldquo;ended&rdquo; state with a status flag. The state machine&rsquo;s outcome is part of its type.</li>
+</ul>
+<h2 id="the-scxml-realization">
+  The SCXML Realization
+  <a class="heading-link" href="#the-scxml-realization">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>W3C SCXML is the executable form of a UML behavioral state machine. The mapping is direct: <code>&lt;state&gt;</code> ↔ simple/composite state, <code>&lt;final&gt;</code> ↔ final state, <code>&lt;initial&gt;</code> / <code>initial=&quot;…&quot;</code> ↔ initial pseudostate, <code>&lt;transition event= cond= target=&gt;</code> ↔ trigger/guard/target, <code>&lt;onentry&gt;</code> / <code>&lt;onexit&gt;</code> ↔ entry/exit behaviors, <code>&lt;datamodel&gt;</code> ↔ extended state.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="cp">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;scxml</span> <span class="na">xmlns=</span><span class="s">&#34;http://www.w3.org/2005/07/scxml&#34;</span> <span class="na">version=</span><span class="s">&#34;1.0&#34;</span> <span class="na">datamodel=</span><span class="s">&#34;ecmascript&#34;</span> <span class="na">initial=</span><span class="s">&#34;active&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;datamodel&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;data</span> <span class="na">id=</span><span class="s">&#34;pending_tool_calls&#34;</span> <span class="na">expr=</span><span class="s">&#34;[]&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;data</span> <span class="na">id=</span><span class="s">&#34;pending_text&#34;</span>       <span class="na">expr=</span><span class="s">&#34;&#39;&#39;&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;data</span> <span class="na">id=</span><span class="s">&#34;messages&#34;</span>           <span class="na">expr=</span><span class="s">&#34;[]&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;data</span> <span class="na">id=</span><span class="s">&#34;streaming_chunk&#34;</span>    <span class="na">expr=</span><span class="s">&#34;&#39;&#39;&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;/datamodel&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;state</span> <span class="na">id=</span><span class="s">&#34;active&#34;</span> <span class="na">initial=</span><span class="s">&#34;idle&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;onentry&gt;&lt;hook.enter</span> <span class="na">state=</span><span class="s">&#34;active&#34;</span><span class="nt">/&gt;&lt;/onentry&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;onexit&gt;&lt;hook.exit</span> <span class="na">state=</span><span class="s">&#34;active&#34;</span><span class="nt">/&gt;&lt;/onexit&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;transition</span> <span class="na">event=</span><span class="s">&#34;cancel&#34;</span> <span class="na">target=</span><span class="s">&#34;cancelled&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;hook.transition</span> <span class="na">event=</span><span class="s">&#34;cancel&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/transition&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;state</span> <span class="na">id=</span><span class="s">&#34;idle&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;onentry&gt;&lt;hook.enter</span> <span class="na">state=</span><span class="s">&#34;idle&#34;</span><span class="nt">/&gt;&lt;/onentry&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;onexit&gt;&lt;hook.exit</span> <span class="na">state=</span><span class="s">&#34;idle&#34;</span><span class="nt">/&gt;&lt;/onexit&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;transition</span> <span class="na">event=</span><span class="s">&#34;session.restore&#34;</span> <span class="na">cond=</span><span class="s">&#34;_event.data.target == &#39;done&#39;&#34;</span> <span class="na">target=</span><span class="s">&#34;done&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;hook.transition</span> <span class="na">event=</span><span class="s">&#34;session.restore&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;assign</span> <span class="na">location=</span><span class="s">&#34;messages&#34;</span> <span class="na">expr=</span><span class="s">&#34;_event.data.messages != null ? _event.data.messages : messages&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;/transition&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;transition</span> <span class="na">event=</span><span class="s">&#34;session.restore&#34;</span> <span class="na">cond=</span><span class="s">&#34;_event.data.target == &#39;awaiting_human&#39;&#34;</span> <span class="na">target=</span><span class="s">&#34;awaiting_human&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;hook.transition</span> <span class="na">event=</span><span class="s">&#34;session.restore&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;assign</span> <span class="na">location=</span><span class="s">&#34;messages&#34;</span> <span class="na">expr=</span><span class="s">&#34;_event.data.messages != null ? _event.data.messages : messages&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;/transition&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;transition</span> <span class="na">event=</span><span class="s">&#34;session.restore&#34;</span> <span class="na">cond=</span><span class="s">&#34;_event.data.target == &#39;failed&#39;&#34;</span> <span class="na">target=</span><span class="s">&#34;failed&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;hook.transition</span> <span class="na">event=</span><span class="s">&#34;session.restore&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;assign</span> <span class="na">location=</span><span class="s">&#34;messages&#34;</span> <span class="na">expr=</span><span class="s">&#34;_event.data.messages != null ? _event.data.messages : messages&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;/transition&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;transition</span> <span class="na">event=</span><span class="s">&#34;session.restore&#34;</span> <span class="na">cond=</span><span class="s">&#34;_event.data.target == &#39;cancelled&#39;&#34;</span> <span class="na">target=</span><span class="s">&#34;cancelled&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;hook.transition</span> <span class="na">event=</span><span class="s">&#34;session.restore&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;assign</span> <span class="na">location=</span><span class="s">&#34;messages&#34;</span> <span class="na">expr=</span><span class="s">&#34;_event.data.messages != null ? _event.data.messages : messages&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;/transition&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;transition</span> <span class="na">event=</span><span class="s">&#34;session.restore&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;hook.transition</span> <span class="na">event=</span><span class="s">&#34;session.restore&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;assign</span> <span class="na">location=</span><span class="s">&#34;messages&#34;</span> <span class="na">expr=</span><span class="s">&#34;_event.data.messages != null ? _event.data.messages : messages&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;/transition&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;transition</span> <span class="na">event=</span><span class="s">&#34;user.message&#34;</span> <span class="na">target=</span><span class="s">&#34;awaiting_model&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;hook.transition</span> <span class="na">event=</span><span class="s">&#34;user.message&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;assign</span> <span class="na">location=</span><span class="s">&#34;pending_text&#34;</span> <span class="na">expr=</span><span class="s">&#34;_event.data.text&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;assign</span> <span class="na">location=</span><span class="s">&#34;messages&#34;</span> <span class="na">expr=</span><span class="s">&#34;messages.concat([{role: &#39;user&#39;, text: pending_text, ts: new Date().toISOString()}])&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;/transition&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/state&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;state</span> <span class="na">id=</span><span class="s">&#34;awaiting_model&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;onentry&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;hook.enter</span> <span class="na">state=</span><span class="s">&#34;awaiting_model&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;llm.complete/&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;/onentry&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;onexit&gt;&lt;hook.exit</span> <span class="na">state=</span><span class="s">&#34;awaiting_model&#34;</span><span class="nt">/&gt;&lt;/onexit&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;transition</span> <span class="na">event=</span><span class="s">&#34;model.text_delta&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;assign</span> <span class="na">location=</span><span class="s">&#34;streaming_chunk&#34;</span> <span class="na">expr=</span><span class="s">&#34;_event.data.text&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;hook.stream/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;hook.transition</span> <span class="na">event=</span><span class="s">&#34;model.text_delta&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;/transition&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;transition</span> <span class="na">event=</span><span class="s">&#34;model.final&#34;</span> <span class="na">target=</span><span class="s">&#34;done&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;hook.transition</span> <span class="na">event=</span><span class="s">&#34;model.final&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;assign</span> <span class="na">location=</span><span class="s">&#34;pending_text&#34;</span> <span class="na">expr=</span><span class="s">&#34;_event.data.text&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;assign</span> <span class="na">location=</span><span class="s">&#34;messages&#34;</span> <span class="na">expr=</span><span class="s">&#34;messages.concat([{role: &#39;assistant&#39;, text: pending_text, ts: new Date().toISOString()}])&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;/transition&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;transition</span> <span class="na">event=</span><span class="s">&#34;model.tool_use&#34;</span> <span class="na">target=</span><span class="s">&#34;executing_tool&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;hook.transition</span> <span class="na">event=</span><span class="s">&#34;model.tool_use&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;assign</span> <span class="na">location=</span><span class="s">&#34;pending_tool_calls&#34;</span> <span class="na">expr=</span><span class="s">&#34;_event.data.tool_calls != null ? _event.data.tool_calls : [{name: _event.data.name, args: _event.data.args}]&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;assign</span> <span class="na">location=</span><span class="s">&#34;messages&#34;</span> <span class="na">expr=</span><span class="s">&#34;messages.concat(pending_tool_calls.map(function(c) { return {role: &#39;tool_call&#39;, text: c.name, args: c.args, ts: new Date().toISOString()}; }))&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;/transition&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;transition</span> <span class="na">event=</span><span class="s">&#34;model.error&#34;</span> <span class="na">target=</span><span class="s">&#34;failed&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;hook.transition</span> <span class="na">event=</span><span class="s">&#34;model.error&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;assign</span> <span class="na">location=</span><span class="s">&#34;pending_text&#34;</span> <span class="na">expr=</span><span class="s">&#34;_event.data.message&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;assign</span> <span class="na">location=</span><span class="s">&#34;messages&#34;</span> <span class="na">expr=</span><span class="s">&#34;messages.concat([{role: &#39;error&#39;, text: pending_text, ts: new Date().toISOString()}])&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;/transition&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/state&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;state</span> <span class="na">id=</span><span class="s">&#34;executing_tool&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;onentry&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;hook.enter</span> <span class="na">state=</span><span class="s">&#34;executing_tool&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;tool.invoke/&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;/onentry&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;onexit&gt;&lt;hook.exit</span> <span class="na">state=</span><span class="s">&#34;executing_tool&#34;</span><span class="nt">/&gt;&lt;/onexit&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;transition</span> <span class="na">event=</span><span class="s">&#34;tool.result&#34;</span> <span class="na">target=</span><span class="s">&#34;awaiting_model&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;hook.transition</span> <span class="na">event=</span><span class="s">&#34;tool.result&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;assign</span> <span class="na">location=</span><span class="s">&#34;messages&#34;</span> <span class="na">expr=</span><span class="s">&#34;messages.concat(_event.data.outputs.map(function(o) { return {role: &#39;tool&#39;, text: o.output, ts: new Date().toISOString()}; }))&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;assign</span> <span class="na">location=</span><span class="s">&#34;pending_tool_calls&#34;</span> <span class="na">expr=</span><span class="s">&#34;[]&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;/transition&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;transition</span> <span class="na">event=</span><span class="s">&#34;tool.error&#34;</span> <span class="na">target=</span><span class="s">&#34;awaiting_model&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;hook.transition</span> <span class="na">event=</span><span class="s">&#34;tool.error&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;assign</span> <span class="na">location=</span><span class="s">&#34;pending_text&#34;</span> <span class="na">expr=</span><span class="s">&#34;_event.data.message&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;assign</span> <span class="na">location=</span><span class="s">&#34;messages&#34;</span> <span class="na">expr=</span><span class="s">&#34;messages.concat([{role: &#39;error&#39;, text: pending_text, ts: new Date().toISOString()}])&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;assign</span> <span class="na">location=</span><span class="s">&#34;pending_tool_calls&#34;</span> <span class="na">expr=</span><span class="s">&#34;[]&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;/transition&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;transition</span> <span class="na">event=</span><span class="s">&#34;hil.request&#34;</span> <span class="na">target=</span><span class="s">&#34;awaiting_human&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;hook.transition</span> <span class="na">event=</span><span class="s">&#34;hil.request&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;/transition&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/state&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;state</span> <span class="na">id=</span><span class="s">&#34;awaiting_human&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;onentry&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;hook.enter</span> <span class="na">state=</span><span class="s">&#34;awaiting_human&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;hil.ask/&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;/onentry&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;onexit&gt;&lt;hook.exit</span> <span class="na">state=</span><span class="s">&#34;awaiting_human&#34;</span><span class="nt">/&gt;&lt;/onexit&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;transition</span> <span class="na">event=</span><span class="s">&#34;user.response&#34;</span> <span class="na">target=</span><span class="s">&#34;executing_tool&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;hook.transition</span> <span class="na">event=</span><span class="s">&#34;user.response&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;/transition&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/state&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;state</span> <span class="na">id=</span><span class="s">&#34;done&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;onentry&gt;&lt;hook.enter</span> <span class="na">state=</span><span class="s">&#34;done&#34;</span><span class="nt">/&gt;&lt;/onentry&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;onexit&gt;&lt;hook.exit</span> <span class="na">state=</span><span class="s">&#34;done&#34;</span><span class="nt">/&gt;&lt;/onexit&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;transition</span> <span class="na">event=</span><span class="s">&#34;user.message&#34;</span> <span class="na">target=</span><span class="s">&#34;awaiting_model&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;hook.transition</span> <span class="na">event=</span><span class="s">&#34;user.message&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;assign</span> <span class="na">location=</span><span class="s">&#34;pending_text&#34;</span> <span class="na">expr=</span><span class="s">&#34;_event.data.text&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;assign</span> <span class="na">location=</span><span class="s">&#34;messages&#34;</span> <span class="na">expr=</span><span class="s">&#34;messages.concat([{role: &#39;user&#39;, text: pending_text, ts: new Date().toISOString()}])&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;/transition&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;transition</span> <span class="na">event=</span><span class="s">&#34;session.finish&#34;</span> <span class="na">target=</span><span class="s">&#34;terminated&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;hook.transition</span> <span class="na">event=</span><span class="s">&#34;session.finish&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;/transition&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/state&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;/state&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;final</span> <span class="na">id=</span><span class="s">&#34;terminated&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;onentry&gt;&lt;hook.enter</span> <span class="na">state=</span><span class="s">&#34;terminated&#34;</span><span class="nt">/&gt;&lt;/onentry&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;donedata&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;param</span> <span class="na">name=</span><span class="s">&#34;output&#34;</span> <span class="na">expr=</span><span class="s">&#34;pending_text&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/donedata&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;/final&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;final</span> <span class="na">id=</span><span class="s">&#34;failed&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;onentry&gt;&lt;hook.enter</span> <span class="na">state=</span><span class="s">&#34;failed&#34;</span><span class="nt">/&gt;&lt;/onentry&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;/final&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;final</span> <span class="na">id=</span><span class="s">&#34;cancelled&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;onentry&gt;&lt;hook.enter</span> <span class="na">state=</span><span class="s">&#34;cancelled&#34;</span><span class="nt">/&gt;&lt;/onentry&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;/final&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/scxml&gt;</span>
+</span></span></code></pre></div><h2 id="closing-thoughts">
+  Closing Thoughts
+  <a class="heading-link" href="#closing-thoughts">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Once the agent loop is a UML behavioral state machine, several recurring design questions answer themselves:</p>
+<ul>
+<li><em>May the agent accept a new user message while a tool is running?</em> — No. There is no transition out of <code>executing_tool</code> triggered by <code>user.message</code>; the event is <strong>deferred</strong> or <strong>silently consumed</strong>, depending on policy. Nothing in the contract is implicit.</li>
+<li><em>Can the user cancel during human approval?</em> — Yes. The <code>cancel</code> transition on the composite state <code>active</code> covers every substate, including <code>awaiting_human</code>.</li>
+<li><em>What is the contract for resuming a saved session?</em> — Exactly the five guarded <code>session.restore</code> transitions; their guards exhaustively partition the payload&rsquo;s <code>target</code> values, and the unguarded fallback handles the rest.</li>
+</ul>
+<p>The diagram is the specification, the SCXML is the implementation, and UML&rsquo;s vocabulary is what lets us talk about either one without ambiguity.</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2019 -
+    
+    2026
+     Mohamed Abdelrahman 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@9.3.0/dist/mermaid.min.js"
+    integrity="sha256-QdTG1YTLLTwD3b95jLqFxpQX9uYuJMNAtVZgwKX4oYU=" crossorigin="anonymous"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: true });
+  </script>
+  
+
+  
+  
+  <script src="/js/coder.js"></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

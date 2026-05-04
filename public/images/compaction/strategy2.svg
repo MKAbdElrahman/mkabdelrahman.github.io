@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 290" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="axis-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <rect width="720" height="290" fill="#fafafa"/>
+
+  <text x="360" y="28" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">Strategy 2: Preserve a recent token fraction</text>
+
+  <!-- Time axis -->
+  <text x="60" y="52" font-size="10" font-weight="600" fill="#94a3b8" letter-spacing="0.5">past</text>
+  <line x1="92" y1="48" x2="652" y2="48" stroke="#cbd5e1" stroke-width="1" marker-end="url(#axis-arrow)"/>
+  <text x="660" y="52" font-size="10" font-weight="600" fill="#94a3b8" letter-spacing="0.5">now</text>
+
+  <!-- BEFORE -->
+  <text x="60" y="80" font-size="11" fill="#64748b">Before — context window full (5 turns of u + m each)</text>
+  <rect x="60" y="88" width="600" height="36" rx="6" stroke="#cbd5e1" stroke-width="1" fill="white"/>
+  <g transform="translate(60, 88)">
+    <rect x="27"  y="0" width="50" height="36" rx="4" fill="#3b82f6"/>
+    <rect x="80"  y="0" width="50" height="36" rx="4" fill="#94a3b8"/>
+    <rect x="138" y="0" width="50" height="36" rx="4" fill="#3b82f6"/>
+    <rect x="191" y="0" width="50" height="36" rx="4" fill="#94a3b8"/>
+    <rect x="249" y="0" width="50" height="36" rx="4" fill="#3b82f6"/>
+    <rect x="302" y="0" width="50" height="36" rx="4" fill="#94a3b8"/>
+    <rect x="360" y="0" width="50" height="36" rx="4" fill="#3b82f6"/>
+    <rect x="413" y="0" width="50" height="36" rx="4" fill="#94a3b8"/>
+    <rect x="471" y="0" width="50" height="36" rx="4" fill="#3b82f6"/>
+    <rect x="524" y="0" width="50" height="36" rx="4" fill="#94a3b8"/>
+  </g>
+  <g transform="translate(60, 88)" font-size="14" font-weight="700" fill="white" text-anchor="middle">
+    <text x="52"  y="23">u</text><text x="105" y="23">m</text>
+    <text x="163" y="23">u</text><text x="216" y="23">m</text>
+    <text x="274" y="23">u</text><text x="327" y="23">m</text>
+    <text x="385" y="23">u</text><text x="438" y="23">m</text>
+    <text x="496" y="23">u</text><text x="549" y="23">m</text>
+  </g>
+  <!-- X marks on Turn 1, 2, 3 boxes (older 70%, snapped to user boundary) -->
+  <g transform="translate(60, 88)" stroke="#dc2626" stroke-width="1.8" stroke-linecap="round">
+    <g transform="translate(27,0)"><line x1="10" y1="8" x2="40" y2="28"/><line x1="40" y1="8" x2="10" y2="28"/></g>
+    <g transform="translate(80,0)"><line x1="10" y1="8" x2="40" y2="28"/><line x1="40" y1="8" x2="10" y2="28"/></g>
+    <g transform="translate(138,0)"><line x1="10" y1="8" x2="40" y2="28"/><line x1="40" y1="8" x2="10" y2="28"/></g>
+    <g transform="translate(191,0)"><line x1="10" y1="8" x2="40" y2="28"/><line x1="40" y1="8" x2="10" y2="28"/></g>
+    <g transform="translate(249,0)"><line x1="10" y1="8" x2="40" y2="28"/><line x1="40" y1="8" x2="10" y2="28"/></g>
+    <g transform="translate(302,0)"><line x1="10" y1="8" x2="40" y2="28"/><line x1="40" y1="8" x2="10" y2="28"/></g>
+  </g>
+  <g font-size="10" fill="#64748b" text-anchor="middle">
+    <text x="138" y="143">Turn 1</text>
+    <text x="249" y="143">Turn 2</text>
+    <text x="360" y="143">Turn 3</text>
+    <text x="471" y="143">Turn 4</text>
+    <text x="582" y="143">Turn 5</text>
+  </g>
+  <!-- cut-off line snapped to start of Turn 4 -->
+  <line x1="420" y1="84" x2="420" y2="128" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <text x="420" y="158" text-anchor="middle" font-size="9" font-weight="600" fill="#dc2626">cut-off (≈70%)</text>
+
+  <!-- arrow -->
+  <line x1="360" y1="180" x2="360" y2="208" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="372" y="198" font-size="10" fill="#475569" font-style="italic">compact</text>
+
+  <!-- AFTER: preserved tail (Turn 4 + Turn 5) + S at the cut-off -->
+  <text x="60" y="228" font-size="11" fill="#64748b">After — recent fraction preserved in chrono order, summary at the cut-off</text>
+  <rect x="60" y="236" width="600" height="36" rx="6" stroke="#cbd5e1" stroke-width="1" fill="white"/>
+  <g transform="translate(60, 236)">
+    <rect x="6"   y="0" width="50" height="36" rx="4" fill="#3b82f6"/>
+    <rect x="59"  y="0" width="50" height="36" rx="4" fill="#94a3b8"/>
+    <rect x="112" y="0" width="50" height="36" rx="4" fill="#3b82f6"/>
+    <rect x="165" y="0" width="50" height="36" rx="4" fill="#94a3b8"/>
+    <rect x="223" y="0" width="80" height="36" rx="4" fill="#f59e0b"/>
+  </g>
+  <g transform="translate(60, 236)" font-size="14" font-weight="700" fill="white" text-anchor="middle">
+    <text x="31"  y="23">u</text>
+    <text x="84"  y="23">m</text>
+    <text x="137" y="23">u</text>
+    <text x="190" y="23">m</text>
+    <text x="263" y="23">S</text>
+  </g>
+  <text x="500" y="259" text-anchor="middle" font-size="10" fill="#94a3b8" font-style="italic">free for new turns →</text>
+</svg>

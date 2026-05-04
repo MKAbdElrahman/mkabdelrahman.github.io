@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  [Draft] Compaction Algorithms for Long-Running Agent Sessions · Mohamed Abdelrahman
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Mohamed Abdelrahman">
+<meta name="description" content="Three canonical strategies for shrinking a conversation when its context window fills — what each one preserves and what it discards.">
+<meta name="keywords" content="blog,developer,personal">
+<meta name="fediverse:creator" content="" />
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="[Draft] Compaction Algorithms for Long-Running Agent Sessions">
+  <meta name="twitter:description" content="Three canonical strategies for shrinking a conversation when its context window fills — what each one preserves and what it discards.">
+
+<meta property="og:url" content="https://mkabdelrahman.github.io/posts/agent-context-compaction-strategies/">
+  <meta property="og:site_name" content="Mohamed Abdelrahman">
+  <meta property="og:title" content="[Draft] Compaction Algorithms for Long-Running Agent Sessions">
+  <meta property="og:description" content="Three canonical strategies for shrinking a conversation when its context window fills — what each one preserves and what it discards.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-04-30T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-04-30T00:00:00+00:00">
+    <meta property="article:tag" content="Agents">
+    <meta property="article:tag" content="Llm">
+    <meta property="article:tag" content="Context-Management">
+    <meta property="article:tag" content="Summarization">
+
+
+
+
+<link rel="canonical" href="https://mkabdelrahman.github.io/posts/agent-context-compaction-strategies/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="https://mkabdelrahman.github.io/">
+      Mohamed Abdelrahman
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/contact/">Contact me</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="https://mkabdelrahman.github.io/posts/agent-context-compaction-strategies/">
+              [Draft] Compaction Algorithms for Long-Running Agent Sessions
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2026-04-30T00:00:00Z">
+                April 30, 2026
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              7-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
+    <a href="/categories/technology/">Technology</a></div>
+
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/agents/">Agents</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/llm/">Llm</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/context-management/">Context-Management</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/summarization/">Summarization</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <h2 id="the-problem">
+  The problem
+  <a class="heading-link" href="#the-problem">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>A long-running agent accumulates messages over time: user prompts, model responses, reasoning traces, tool calls, tool outputs. The model&rsquo;s context window is finite — from a hundred thousand tokens on the smaller end to a million or more on the largest current frontier models. Once the conversation no longer fits, continuing without intervention triggers a hard error or silent truncation by the provider.</p>
+<p>A <strong>compaction algorithm</strong> shrinks the conversation in place. The interesting strategies share a single shape: pick a moment on the conversation&rsquo;s timeline (the <em>split point</em>), collapse everything older into a single summary message, place the summary at the split point, and keep everything newer as-is.</p>
+<h2 id="the-conversation-as-a-timeline">
+  The conversation as a timeline
+  <a class="heading-link" href="#the-conversation-as-a-timeline">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>A conversation is a sequence ordered in time. Older messages on the left, newer ones on the right. The model reads the array left-to-right on every turn — the leftmost item is the oldest thing it remembers, the rightmost is the most recent thing it has to respond to. New user turns extend the right edge.</p>
+<p>When the conversation outgrows the window, a strategy answers one question: <strong>which moment on the timeline is the split point?</strong> The three strategies below differ entirely in how they pick it.</p>
+<h2 id="strategy-1-preserve-user-messages">
+  Strategy 1: Preserve user messages
+  <a class="heading-link" href="#strategy-1-preserve-user-messages">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Split-point rule: walking newest-first, keep every user message and drop everything else until a max-token cap (~20K) is reached. Kept user messages are re-ordered chronologically; the summary sits at the split point, just after the latest preserved user message.</p>
+<p><img src="/images/compaction/strategy1.svg" alt="Strategy 1: Preserve user messages"></p>
+<h2 id="strategy-2-preserve-a-recent-token-fraction">
+  Strategy 2: Preserve a recent token fraction
+  <a class="heading-link" href="#strategy-2-preserve-a-recent-token-fraction">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Split-point rule: walk backward from the present, accumulating tokens, until you reach <code>p × total_tokens</code> (observed: <code>p = 0.3</code>); snap to the next user-message boundary so the preserved tail starts on a user turn. Everything earlier than that snapped point collapses; everything in the recent fraction stays as-is regardless of role.</p>
+<p><img src="/images/compaction/strategy2.svg" alt="Strategy 2: Preserve a recent token fraction"></p>
+<h2 id="strategy-3-preserve-recent-turns">
+  Strategy 3: Preserve recent turns
+  <a class="heading-link" href="#strategy-3-preserve-recent-turns">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Split-point rule: a &ldquo;turn&rdquo; is one user message plus everything generated in response (assistant text, tool calls, tool outputs) up to the next user message. Keep the last <code>N</code> complete turns (default <code>N=2</code>); collapse everything older into the summary. A per-turn token budget caps each preserved turn (observed defaults: 25% of usable context, clamped to [2K, 8K]).</p>
+<p>The summary sits at the split point — chronologically immediately after the last preserved turn.</p>
+<p><img src="/images/compaction/strategy3.svg" alt="Strategy 3: Preserve recent turns"></p>
+<h2 id="comparison">
+  Comparison
+  <a class="heading-link" href="#comparison">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<table>
+  <thead>
+      <tr>
+          <th>Strategy</th>
+          <th>Split-point rule</th>
+          <th>What survives the cut</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Preserve user messages</td>
+          <td>every user message is on the &ldquo;keep&rdquo; side; agent items are on the &ldquo;drop&rdquo; side</td>
+          <td>every user message (within a ~20K token budget)</td>
+      </tr>
+      <tr>
+          <td>Preserve recent token fraction</td>
+          <td>walk back until <code>p × total_tokens</code> collected, snap to user-msg boundary</td>
+          <td>everything in the recent fraction, regardless of role</td>
+      </tr>
+      <tr>
+          <td>Preserve recent turns</td>
+          <td>the user-msg boundary that starts the (M − N + 1)ᵗʰ turn</td>
+          <td>the last N complete turns (within per-turn budget)</td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="when-to-choose-which">
+  When to choose which
+  <a class="heading-link" href="#when-to-choose-which">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>The choice depends on two properties of the workload:</p>
+<ul>
+<li><strong>Role asymmetry.</strong> Are user prompts the durable record (with agent output reproducible from them), or do both sides feed later turns equally?</li>
+<li><strong>Recency.</strong> Do the last few exchanges drive the next decision, or does the cumulative trail of decisions matter more?</li>
+</ul>
+<h2 id="a-common-pre-trim-step">
+  A common pre-trim step
+  <a class="heading-link" href="#a-common-pre-trim-step">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>All three strategies do something <em>before</em> the LLM call to keep the input itself small. The reason is the same — the model that&rsquo;s going to write the summary is also bound by a context window, and feeding it 100% of an overflowing conversation just moves the overflow into the summarization call. Concrete pre-trim moves seen in practice:</p>
+<ul>
+<li>Iteratively dropping the oldest items and retrying when the summarization call itself overflows.</li>
+<li>Walking newest-first and dropping agent-generated items until the input fits, leaving user messages intact.</li>
+<li>Truncating individual tool outputs to their last few dozen lines, with the original spilled to a temp file.</li>
+<li>Hard-capping the total token budget for tool-response content at some fraction of the model&rsquo;s window (e.g., 50K tokens).</li>
+<li>Marking older tool outputs as &ldquo;compacted&rdquo; with a timestamp so they render as <code>[Old tool result content cleared]</code> to the LLM but stay queryable in the host&rsquo;s storage.</li>
+</ul>
+<p>The output of pre-trim is what actually goes to the summarization call. The strategy&rsquo;s preservation rule applies to the <em>original</em> timeline (which messages survive as-is into the post-compaction state), not to what the summarizer sees.</p>
+<h2 id="triggers">
+  Triggers
+  <a class="heading-link" href="#triggers">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Triggers fall into three kinds:</p>
+<ul>
+<li><strong>Budget trigger.</strong> Fires when a measurement crosses a threshold (e.g. <code>total_tokens &gt;= limit</code>). Common forms: a fixed fraction of the window (50% is widely seen); a fixed-size headroom buffer (20K of slack for windows over 200K, 20% for smaller ones); a per-model auto-compact limit. Reactive overflow — running compaction after a context-window-exceeded error — is a budget trigger that fired late.</li>
+<li><strong>Structural trigger.</strong> Fires on a change to the shape or contents of the conversation: &ldquo;a new message arrived,&rdquo; &ldquo;a tool produced output,&rdquo; &ldquo;compaction just completed,&rdquo; &ldquo;the user invoked compaction.&rdquo; No measurement — the fact that it happened is the trigger. Used for eager work that keeps pressure from building (e.g. distilling a fresh tool output so it&rsquo;s already small by the time a budget trigger fires) and for explicit user-invoked compaction.</li>
+<li><strong>Temporal trigger.</strong> Fires on a clock — &ldquo;N milliseconds have elapsed since the last fire.&rdquo; No measurement, no event, just time. Used for periodic maintenance with no natural event hook (cache GC, idle cleanup, polling-style work).</li>
+</ul>
+<table>
+  <thead>
+      <tr>
+          <th>Trigger kind</th>
+          <th>Question</th>
+          <th>Example</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Budget</td>
+          <td>&ldquo;Have we exceeded a limit?&rdquo;</td>
+          <td><code>total &gt;= 80_000</code></td>
+      </tr>
+      <tr>
+          <td>Structural</td>
+          <td>&ldquo;Did this thing happen?&rdquo;</td>
+          <td><code>on(new_message)</code></td>
+      </tr>
+      <tr>
+          <td>Temporal</td>
+          <td>&ldquo;Has time elapsed?&rdquo;</td>
+          <td><code>every(5 minutes)</code></td>
+      </tr>
+  </tbody>
+</table>
+<p>Triggers compose. An inline auto-compact in practice is <strong>budget AND structural</strong>: <code>total &gt;= auto_compact_limit &amp;&amp; (model_needs_follow_up || has_pending_input)</code>. The structural predicate guards against compacting at the wrong moment — e.g. just as a turn was about to end naturally.</p>
+<p>Most non-trivial systems mix all three: a budget trigger to react to pressure, structural triggers to do work eagerly so pressure builds slower, and temporal triggers for housekeeping that nothing else hooks.</p>
+<h2 id="measurement">
+  Measurement
+  <a class="heading-link" href="#measurement">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Triggers depend on token counts, and token counts depend on estimates.</p>
+<p>A crude back-of-envelope formula: <code>tokens ≈ characters / 4</code>.</p>
+<h2 id="the-shared-shape">
+  The shared shape
+  <a class="heading-link" href="#the-shared-shape">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Every strategy reduces to the same two artifacts the host stores: a generated <strong>summary message</strong>, and a <strong>tail-start pointer</strong> marking where the preserved messages begin on the original timeline. On the next turn, a history loader splices them: <code>[…messages-from-pointer-onwards, summary]</code>.</p>
+<table>
+  <thead>
+      <tr>
+          <th>Strategy</th>
+          <th>Tail-start pointer</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Preserve user messages</td>
+          <td>first kept user message</td>
+      </tr>
+      <tr>
+          <td>Preserve recent token fraction</td>
+          <td>first message of the recent fraction</td>
+      </tr>
+      <tr>
+          <td>Preserve recent turns</td>
+          <td>first user message of the (M − N + 1)ᵗʰ turn</td>
+      </tr>
+  </tbody>
+</table>
+<p>Swapping strategies is a question of which pointer value gets written, not of storage shape — the host ships one replacement mechanism and applies it uniformly.</p>
+<h2 id="terms">
+  Terms
+  <a class="heading-link" href="#terms">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<table>
+  <thead>
+      <tr>
+          <th>Term</th>
+          <th>Definition</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>compaction</strong></td>
+          <td>Shrinking the conversation in place when it no longer fits the context window: collapse older content into a summary, preserve recent content as-is.</td>
+      </tr>
+      <tr>
+          <td><strong>split point</strong></td>
+          <td>A position on the conversation timeline. Everything older than it collapses into the summary; everything newer is preserved as-is. Strategies differ only in how they pick this position.</td>
+      </tr>
+      <tr>
+          <td><strong>tail</strong></td>
+          <td>The contiguous suffix of messages preserved as-is — from the split point to the present.</td>
+      </tr>
+      <tr>
+          <td><strong>summary message</strong></td>
+          <td>A single LLM-generated message condensing everything older than the split point. The host stores it alongside the tail.</td>
+      </tr>
+      <tr>
+          <td><strong>tail-start pointer</strong></td>
+          <td>The stored marker (a message ID or array index) identifying where the tail begins on the original timeline. One value gets written per compaction.</td>
+      </tr>
+      <tr>
+          <td><strong>turn</strong></td>
+          <td>One user message plus every agent-generated item produced in response, up to the next user message.</td>
+      </tr>
+      <tr>
+          <td><strong>agent-generated item</strong></td>
+          <td>Any conversation item not authored by the user: assistant text, tool calls, tool outputs, reasoning traces.</td>
+      </tr>
+      <tr>
+          <td><strong>trigger</strong></td>
+          <td>The condition that initiates compaction. Three kinds: <strong>budget</strong> (a measurement crosses a threshold), <strong>structural</strong> (an event happened), <strong>temporal</strong> (time elapsed).</td>
+      </tr>
+      <tr>
+          <td><strong>pre-trim</strong></td>
+          <td>Token-reduction applied to the input of the summarization call itself so the summarizer doesn&rsquo;t overflow. Distinct from the strategy&rsquo;s preservation rule, which describes the post-compaction timeline.</td>
+      </tr>
+      <tr>
+          <td><strong>host</strong></td>
+          <td>The runtime that owns the conversation state and runs compaction (the agent process or session manager).</td>
+      </tr>
+  </tbody>
+</table>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2019 -
+    
+    2026
+     Mohamed Abdelrahman 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

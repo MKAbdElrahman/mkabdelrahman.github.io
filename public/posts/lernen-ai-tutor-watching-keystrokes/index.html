@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  An AI tutor that watches every keystroke · Mohamed Abdelrahman
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Mohamed Abdelrahman">
+<meta name="description" content="Building lernen — a Bubble Tea flashcard TUI for German vocabulary where the AI teacher sees every reveal, replay, and grade, and reacts in tight loops.">
+<meta name="keywords" content="blog,developer,personal">
+<meta name="fediverse:creator" content="" />
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="An AI tutor that watches every keystroke">
+  <meta name="twitter:description" content="Building lernen — a Bubble Tea flashcard TUI for German vocabulary where the AI teacher sees every reveal, replay, and grade, and reacts in tight loops.">
+
+<meta property="og:url" content="https://mkabdelrahman.github.io/posts/lernen-ai-tutor-watching-keystrokes/">
+  <meta property="og:site_name" content="Mohamed Abdelrahman">
+  <meta property="og:title" content="An AI tutor that watches every keystroke">
+  <meta property="og:description" content="Building lernen — a Bubble Tea flashcard TUI for German vocabulary where the AI teacher sees every reveal, replay, and grade, and reacts in tight loops.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-05-04T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-05-04T00:00:00+00:00">
+    <meta property="article:tag" content="Tui">
+    <meta property="article:tag" content="Llm">
+    <meta property="article:tag" content="Agents">
+    <meta property="article:tag" content="Learning">
+    <meta property="article:tag" content="Bubble-Tea">
+    <meta property="article:tag" content="Go">
+
+
+
+
+<link rel="canonical" href="https://mkabdelrahman.github.io/posts/lernen-ai-tutor-watching-keystrokes/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="https://mkabdelrahman.github.io/">
+      Mohamed Abdelrahman
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/contact/">Contact me</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="https://mkabdelrahman.github.io/posts/lernen-ai-tutor-watching-keystrokes/">
+              An AI tutor that watches every keystroke
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2026-05-04T00:00:00Z">
+                May 4, 2026
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              8-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
+    <a href="/categories/technology/">Technology</a></div>
+
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/tui/">Tui</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/llm/">Llm</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/agents/">Agents</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/learning/">Learning</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/bubble-tea/">Bubble-Tea</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/go/">Go</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <h2 id="a-flashcard-app-but-the-ai-is-in-the-loop">
+  A flashcard app, but the AI is in the loop
+  <a class="heading-link" href="#a-flashcard-app-but-the-ai-is-in-the-loop">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Most &ldquo;AI study buddies&rdquo; are chatbots glued to the side of a flashcard app. You study, then you ask a question, then the model answers from cold context. The model has no idea you just got the same word wrong twice and replayed the audio four times.</p>
+<p>I wanted to flip that. The model should see every action — reveals, replays, grades, notes — and react inside the study loop, not after it.</p>
+<p>The result is <strong>lernen</strong>: a single Go binary that loads any Anki <code>.apkg</code> deck and gives you a Bubble Tea TUI with the AI as a permanent right-side panel. The interesting part isn&rsquo;t the TUI. It&rsquo;s what gets piped into the system prompt on every turn.</p>
+<h2 id="the-minimum-viable-feedback-cycle">
+  The minimum viable feedback cycle
+  <a class="heading-link" href="#the-minimum-viable-feedback-cycle">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Before any AI, the cycle on each card looks like this:</p>
+<ol>
+<li>Card front shows. Press <code>space</code> to reveal — or press <code>a</code> and type your guess first.</li>
+<li>After reveal, you self-grade <code>1</code> (again) / <code>2</code> (hard) / <code>3</code> (good) / <code>4</code> (easy).</li>
+<li>The next card surfaces.</li>
+</ol>
+<p>Spaced repetition handles intervals (1m / 10m / 1d / 7d), and <code>Again</code> re-queues the card 3 cards later in the same session so failures actually come back. That part is mechanical; no AI involved.</p>
+<p>Where AI enters: between step 2 and step 3, the model gets a fresh request with full session context and replies with one short tip — <em>&ldquo;You&rsquo;re close — Brötchen is the diminutive of Brot, so a small bread roll. Think of -chen as &rsquo;little&rsquo;.&rdquo;</em></p>
+<p>It&rsquo;s a tip, not a judgment. The model never grades the answer or recommends a number. The learner stays in charge of <code>1-4</code>.</p>
+<h2 id="what-the-model-actually-sees">
+  What the model actually sees
+  <a class="heading-link" href="#what-the-model-actually-sees">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>The system prompt is rebuilt from scratch on every turn. Not a fixed system message with a growing user thread — the <strong>whole context block is regenerated</strong>, so the model always sees current state.</p>
+<p>Concretely:</p>
+<pre tabindex="0"><code>DECK PROGRESS (lifetime)
+- Total cards: 926 · Known: 23 · Learning: 47 · New: 856 · Due now: 870
+
+CARD IN CONTEXT (what the learner is looking at)
+- Screen: study
+- German: Brötchen
+- English: bread roll
+
+THIS SESSION (live, in-memory only)
+- Reviewed: 4 · good+: 1 · misses: 1 · streak: 0 · elapsed: 2m
+- Struggling on: &#34;Brötchen&#34; (bread roll) ×2
+
+CARDS YOU&#39;VE WORKED WITH THIS SESSION (newest first)
+1. &#34;Brötchen&#34; (bread roll) — grades: 1/again → 2/hard · audio×3 · note: &#34;I keep mixing this up with Brot&#34; · 12s ago
+2. &#34;fehlen&#34; (to be missing) — grades: 2/hard · 47s ago
+3. &#34;Haus&#34; (house) — grades: 3/good · 1m ago
+
+ACROSS RECENT SESSIONS (loaded from history)
+- 2h ago (12m session): 12 reviewed · 8 good · 3 misses · struggled: &#34;Brötchen&#34; (bread roll) ×3
+    note on &#34;Brötchen&#34;: &#34;I keep mixing this up with Brot&#34;
+- 1d ago (8m session): 7 reviewed · 5 good · 1 misses · struggled: &#34;fehlen&#34; (to be missing) ×1
+
+RECENT RAW EVENTS (chronological tail)
+- 0s ago: graded &#34;Brötchen&#34; (bread roll) → again (took 4s)
+    learner&#39;s note: &#34;I keep mixing this up&#34;
+- 4s ago: replayed audio for &#34;Brötchen&#34; (likely listening repeatedly to lock in pronunciation)
+- 5s ago: replayed audio for &#34;Brötchen&#34; (likely listening repeatedly to lock in pronunciation)
+- 9s ago: revealed answer for &#34;Brötchen&#34;
+- 14s ago: graded &#34;fehlen&#34; (to be missing) → hard (took 6s)
+</code></pre><p>That block has four time-scales stitched together: lifetime progress, current session, the per-card roster, and prior sessions persisted to a JSONL file under <code>~/.local/share/lernen/</code>. The roster is the most useful one — instead of a chronological event soup, the model sees each card the user has touched as one row with <strong>all</strong> grades chained, audio replays counted, and any notes inlined.</p>
+<h2 id="recording-every-decision">
+  Recording every decision
+  <a class="heading-link" href="#recording-every-decision">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Anything the user does in the TUI flows into the same <code>Session</code> log. Pressing <code>p</code> to replay audio is recorded. Toggling mute is recorded. Submitting a search query is recorded. Opening the chat overlay is recorded.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">const</span><span class="w"> </span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nx">EventGrade</span><span class="w">        </span><span class="p">=</span><span class="w"> </span><span class="s">&#34;grade&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nx">EventReveal</span><span class="w">       </span><span class="p">=</span><span class="w"> </span><span class="s">&#34;reveal&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nx">EventAudioReplay</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="s">&#34;audio_replay&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nx">EventMuteToggle</span><span class="w">   </span><span class="p">=</span><span class="w"> </span><span class="s">&#34;mute_toggle&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nx">EventChatOpen</span><span class="w">     </span><span class="p">=</span><span class="w"> </span><span class="s">&#34;chat_open&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nx">EventChatSend</span><span class="w">     </span><span class="p">=</span><span class="w"> </span><span class="s">&#34;chat_send&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nx">EventStudyEnter</span><span class="w">   </span><span class="p">=</span><span class="w"> </span><span class="s">&#34;study_enter&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nx">EventStudyLeave</span><span class="w">   </span><span class="p">=</span><span class="w"> </span><span class="s">&#34;study_leave&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nx">EventBrowseFilter</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&#34;browse_filter&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nx">EventSearch</span><span class="w">       </span><span class="p">=</span><span class="w"> </span><span class="s">&#34;search&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">)</span><span class="w">
+</span></span></span></code></pre></div><p>This sounds excessive until you see the difference in tip quality. <em>&ldquo;Audio replayed 4 times for Brötchen&rdquo;</em> in the prompt produces tips targeting pronunciation. Without it, the model gives a generic dictionary fact.</p>
+<p>The prompt is explicit about this:</p>
+<blockquote>
+<p><strong>GROUND EVERY TIP IN OBSERVED BEHAVIOR</strong></p>
+<p>Tips and answers MUST reference what the learner has actually done. Examples:</p>
+<ul>
+<li>If they replayed audio 3+ times for a word: target pronunciation, give a phonetic hook.</li>
+<li>If they failed the same card twice: change the angle. Don&rsquo;t repeat the hook you tried before.</li>
+<li>If they took 12s before grading &ldquo;again&rdquo;: acknowledge they were close; give a precise contrast with a similar word they confused it with.</li>
+</ul>
+<p>If a tip would work as a generic fact about the word with no behavioral context, you&rsquo;re probably missing the signal — re-read the session log.</p>
+</blockquote>
+<h2 id="teacher-not-judge">
+  Teacher, not judge
+  <a class="heading-link" href="#teacher-not-judge">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>An earlier iteration had the AI score the user&rsquo;s typed answer with <code>✓ correct</code> / <code>◐ close</code> / <code>✗ off</code> icons and recommend a grade. It felt off — the model was overstepping into a role the learner already owned.</p>
+<p>Current contract: the AI is a <strong>teacher</strong>, not a judge. It reads the typed guess against the canonical meaning. If the guess is essentially right, it affirms briefly and adds one reinforcing fact. If wrong, it gently explains what the learner got wrong, in 1-2 short sentences. It never scores, never suggests a grade.</p>
+<pre tabindex="0"><code>You&#39;re close — Brötchen is the diminutive of Brot, so a small bread
+roll. Think of -chen as &#34;little.&#34;
+</code></pre><p>That&rsquo;s it. The user still picks <code>1-4</code> themselves, with no AI suggestion to anchor on.</p>
+<p>The session log carries the artifact forward: <code>guess=&quot;bread&quot;; teacher_said=&quot;You're close — Brötchen is the diminutive...&quot;</code>. The next time the same card surfaces, the model sees what it taught last time and is told explicitly to <em>change the angle</em>, not repeat itself.</p>
+<h2 id="letting-the-ai-inject-cards">
+  Letting the AI inject cards
+  <a class="heading-link" href="#letting-the-ai-inject-cards">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>The most interesting recent addition: the teacher can <strong>add related cards to the queue</strong>.</p>
+<p>When the learner misses a card or attaches a note, the prompt invites an optional structured trailer:</p>
+<blockquote>
+<p>OPTIONAL — only if there are 1-2 specific OTHER German words from this A1 deck the learner should drill alongside this one (e.g., a confusable pair, a same-root word, a near-synonym), end your reply with a NEW LINE containing exactly:</p>
+<pre tabindex="0"><code>INJECT: word1, word2
+</code></pre></blockquote>
+<p>A typical reply now looks like:</p>
+<pre tabindex="0"><code>You&#39;re close — Brötchen is the diminutive of Brot, so a small bread roll.
+INJECT: das Brot, das Brötchen
+</code></pre><p>The runtime parses the trailer, <strong>strips it from the visible tip</strong>, resolves each word against the deck (case-insensitive substring on the canonical form), and inserts up to 2 matched cards at the next position in the study queue. A status flash announces it: <em>&quot;+2 related cards queued by tutor.&quot;</em></p>
+<p>Guards keep the queue sane: capped at 2 per tip, deduped against the next 8 cards already coming up, silent skip for words that don&rsquo;t match anything in the deck. The user sees the tip and the next card; the structured machinery is invisible.</p>
+<p>This is the lightest possible &ldquo;tool use&rdquo; — no function-calling APIs, no tool-result round-trips, just a parsable trailer and local resolution. It works the same on OpenAI and Anthropic.</p>
+<h2 id="the-good-parts-about-doing-this-in-a-tui">
+  The good parts about doing this in a TUI
+  <a class="heading-link" href="#the-good-parts-about-doing-this-in-a-tui">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>A few things only landed cleanly because the surface is a terminal:</p>
+<p><strong>Stream visibility.</strong> Streaming responses show up live in the panel — there&rsquo;s no &ldquo;wait for the response, then render&rdquo; lag. The user sees the tip arrive token by token alongside the next card.</p>
+<p><strong>Side panel as ambient state.</strong> The chat panel is always visible by default but doesn&rsquo;t capture keystrokes until you press <code>tab</code>. That separation took me three iterations to get right (default-open kept eating the <code>1-4</code> grade keys), but now the panel is a calm observer most of the time and a chat input when you ask for it.</p>
+<p><strong>The whole prompt is text.</strong> No DOM, no framework. Stitching together the system prompt is a few <code>fmt.Fprintf</code> calls into a <code>strings.Builder</code>. The session roster, the prior-sessions block, the per-card behavior summary — they&rsquo;re all just functions that return strings. Easy to test, easy to inspect.</p>
+<p>There&rsquo;s a <code>TestShowSystemPrompt</code> test that just runs through a synthetic study sequence and prints the resulting prompt to stdout. That&rsquo;s the most useful test in the repo for tuning the AI&rsquo;s behavior — you can read what the model will actually see.</p>
+<h2 id="where-this-goes-next">
+  Where this goes next
+  <a class="heading-link" href="#where-this-goes-next">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>A few directions on my list:</p>
+<ul>
+<li><strong>Active recall first.</strong> Currently <code>a</code> for typing your guess is opt-in. Making it the default would be a step-change in retention but a real UX shift.</li>
+<li><strong>Calibration tracking.</strong> The session bundle already records the user&rsquo;s grade plus the teacher&rsquo;s reaction. Cross-referencing — <em>&ldquo;you graded Good but the same card came back as Again 12 minutes later&rdquo;</em> — would make a useful long-term signal.</li>
+<li><strong>Cross-deck context.</strong> Today every deck has its own history file. A shared &ldquo;things you generally struggle with&rdquo; layer would help once you study more than one deck.</li>
+</ul>
+<p>The code lives in a single Go module: <code>github.com/mkcodedev/lernen</code>. About 2.5K lines including tests, no external services beyond an OpenAI or Anthropic API key. Drop in any Anki <code>.apkg</code> and run.</p>
+<p>The model I keep coming back to: <strong>an AI is only as useful as its context, and the right place to assemble that context is inside the app — not a generic chat sidebar that has to ask you what you&rsquo;re doing.</strong></p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2019 -
+    
+    2026
+     Mohamed Abdelrahman 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

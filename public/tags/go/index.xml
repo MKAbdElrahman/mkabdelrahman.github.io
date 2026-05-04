@@ -2,81 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Go on Mohamed Abdelrahman</title>
-    <link>http://localhost:1313/tags/go/</link>
+    <link>https://mkabdelrahman.github.io/tags/go/</link>
     <description>Recent content in Go on Mohamed Abdelrahman</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 13 Jan 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/go/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 04 May 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://mkabdelrahman.github.io/tags/go/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Method Sets in Go</title>
-      <link>http://localhost:1313/posts/go-method-sets/</link>
-      <pubDate>Mon, 13 Jan 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/go-method-sets/</guid>
-      <description>&lt;h4 id=&#34;introduction-to-method-sets&#34;&gt;&lt;strong&gt;Introduction to Method Sets&lt;/strong&gt;&lt;/h4&gt;&#xA;&lt;p&gt;In Go, the method set of a type defines the methods that can be called on a variable of that type. This concept is fundamental when working with methods, interfaces, and type implementations. Method sets vary depending on whether the type is a value, a pointer, or an interface.&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h4 id=&#34;method-set-of-a-value-type&#34;&gt;&lt;strong&gt;Method Set of a Value Type&lt;/strong&gt;&lt;/h4&gt;&#xA;&lt;p&gt;The method set of a value type includes only those methods that have a &lt;strong&gt;value receiver&lt;/strong&gt;. Methods with pointer receivers are &lt;strong&gt;not&lt;/strong&gt; part of the method set of a value type.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Resiliency Patterns: Retry and Circuit Breaker, Intuition Behind Them and How they Work Together</title>
-      <link>http://localhost:1313/posts/resiliency-patterns-retry-circuit-breaker/</link>
-      <pubDate>Wed, 06 Nov 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/resiliency-patterns-retry-circuit-breaker/</guid>
-      <description>&lt;p&gt;The purpose of this blog post to understand intituvely the retry and circuit breaker reseliency patterns. They are ofen involved to work around the unreliabilty of the network. Both are used to  handle error but differ in their  timescale. Mainly retrys are used to handle short term errors, those are errors that happen because of a netwrok glithch, the cause of the problem is expected to to be fixed in few seconds or less. Circuit Beakers is a smarter retry pattern. Here  the issue is expected to last for a long period of time, instead of hammering the server continously, we use smart strategy to probe its health instead of making the problem worse. May be the server is under high load and retrying only worsens the problem.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>How to Organize Your Codebase in Go (No MVCs, Onions, or Hexagons...)</title>
-      <link>http://localhost:1313/posts/code-organization-go/</link>
-      <pubDate>Mon, 04 Nov 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/code-organization-go/</guid>
-      <description>&lt;p&gt;Organizing code is all about how you break down your application logic into components, which typically translates to packages in Go. Early in my career, I was always searching for the “ideal” structure — where to put services, handlers, etc. There are countless articles out there recommending specific ways to organize code, each with its own approach.&lt;/p&gt;&#xA;&lt;p&gt;Deciding on a code structure is important, but it’s often done poorly. Developers can fall into the trap of overusing patterns encouraged by frameworks, applying them in contexts that may not be suitable. For instance, someone might choose Model-View-Controller (MVC) or Ports and Adapters, then feel pressured to arrange their code to fit that pattern just to satisfy the framework. This approach skips over the real challenge: decomposing your application logic into a set of cohesive, interacting components.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Resiliency Patterns: Implementing The Load Shedding Pattern in Go</title>
-      <link>http://localhost:1313/posts/resiliency-patterns-load-shedding/</link>
-      <pubDate>Sun, 03 Nov 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/resiliency-patterns-load-shedding/</guid>
-      <description>&lt;p&gt;&lt;strong&gt;Suppose your web service is experiencing a surge in traffic.&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;When the load increases beyond what your service can handle, it can lead to slow responses, timeouts, and ultimately crashes. Load shedding allows your service to selectively drop requests when the load is too high. A targeted approach can also be used, where only low-priority requests are dropped, preserving capacity for critical requests.&lt;/p&gt;&#xA;&lt;p&gt;To effectively implement load shedding, you need to establish a mechanism to continuously monitor relevant control signals. Common control signals include:&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>A Dependency Injection Framework is Against Go Philosophy</title>
-      <link>http://localhost:1313/posts/go-dependancy-injection/</link>
-      <pubDate>Fri, 01 Nov 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/go-dependancy-injection/</guid>
-      <description>&lt;p&gt;If you’re a Java or .NET developer, you’re probably used to dependency injection being a core idea in web frameworks. Let&amp;rsquo;s first clarify what dependency injection is: it’s simply the practice of passing dependencies as arguments. If an object requires services from another object, instead of hardwiring it, you inject it through a factory method, constructor, or even a setter method. In Go, we don’t have constructors, and setting dependencies through setters is generally discouraged in most cases. Typically, we’ll have something like this:&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Resiliency Patterns: Implemeting The Retry Pattern in Go</title>
-      <link>http://localhost:1313/posts/resiliency-patterns-retry/</link>
-      <pubDate>Fri, 01 Nov 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/resiliency-patterns-retry/</guid>
-      <description>&lt;p&gt;&lt;strong&gt;Suppose service A needs to send a request to service B.&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;If service B is unavailable, or requests are timing out due to high load or congestion, or if there’s an issue with the network that caused the request to fail, retrying the request might make sense—provided the operation is idempotent (can be retried without changing the result).&lt;/p&gt;&#xA;&lt;p&gt;To implement a retry algorithm effectively, we need to consider:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;When to stop retrying?&lt;/li&gt;&#xA;&lt;li&gt;How long to wait between retries?&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;when-to-stop-retrying&#34;&gt;When to Stop Retrying?&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;If the client times out the RPC call&lt;/strong&gt;: In Go, the context object is used to propagate cancellation signals. We need to listen to the done channel and stop retrying if the request was cancelled.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Resiliency Patterns: Implementing The Circuit Breaker Pattern in Go</title>
-      <link>http://localhost:1313/posts/resiliency-patterns-circuit-breaker/</link>
-      <pubDate>Thu, 31 Oct 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/resiliency-patterns-circuit-breaker/</guid>
-      <description>&lt;p&gt;The Circuit Breaker pattern helps protect services from cascading failures when they need to communicate over a network. Here’s how it works:&lt;/p&gt;&#xA;&lt;p&gt;Imagine &lt;strong&gt;Service A&lt;/strong&gt; needs to send requests to &lt;strong&gt;Service B&lt;/strong&gt;. If &lt;strong&gt;Service B&lt;/strong&gt; is down or not responding, continuing to send requests could make the issue worse. Service A might also be relied upon by other services (&lt;strong&gt;Service C, D, F&lt;/strong&gt;), so a failure in Service B could trigger a chain reaction of failures.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Go Context Package: Cause-aware Context Cancellation</title>
-      <link>http://localhost:1313/posts/cause/</link>
-      <pubDate>Tue, 21 Nov 2023 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/cause/</guid>
-      <description>&lt;p&gt;The context package in Go has recently introduced  cause-aware context cancellation functions. This update includes the &lt;code&gt;WithCancelCause&lt;/code&gt;, &lt;code&gt;WithDeadlineCause&lt;/code&gt;, and &lt;code&gt;WithTimeoutCause&lt;/code&gt; functions, as well as the &lt;code&gt;Cause&lt;/code&gt; function for retrieving the cause of context cancellation.&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;WithCancelCause&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;parent&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Context&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;ctx&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Context&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;cancel&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;CancelCauseFunc&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This function is analogous to &lt;code&gt;WithCancel&lt;/code&gt;, but it returns a &lt;code&gt;CancelCauseFunc&lt;/code&gt; that allows setting an error as the cause of cancellation.&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;WithDeadlineCause&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;parent&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Context&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;d&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;time&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;Time&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;cause&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;error&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;Context&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;CancelFunc&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Combining features of &lt;code&gt;WithDeadline&lt;/code&gt; with the ability to provide a cause for context cancellation.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Simplify Configuration Management in Go with the &#39;conf&#39; Package</title>
-      <link>http://localhost:1313/posts/go-conf-pkg/</link>
-      <pubDate>Wed, 25 Oct 2023 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/go-conf-pkg/</guid>
-      <description>&lt;p&gt;The &amp;ldquo;conf&amp;rdquo; package is designed to make configuration management in Go straightforward and flexible. It allows you to define your application&amp;rsquo;s configuration as a struct and then parse it for both environment variables and command-line arguments. This approach makes it easy to handle different configuration sources, and the package provides a variety of customization options through struct tags.&lt;/p&gt;&#xA;&lt;p&gt;First, you need to install the &amp;ldquo;conf&amp;rdquo; package:&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;go get github.com/ardanlabs/conf/v3&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Define a struct that represents your application&amp;rsquo;s configuration. You can use struct tags to specify default values, environment variable names, and other options.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Understanding Go&#39;s init Functions: Best Practices and Common Misuses</title>
-      <link>http://localhost:1313/posts/go-init-functions/</link>
-      <pubDate>Sun, 22 Oct 2023 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/go-init-functions/</guid>
-      <description>&lt;p&gt;In Go, &lt;code&gt;init&lt;/code&gt; functions play a crucial role in package initialization. They are used to set up the initial state of your application, and their behavior can be both powerful and tricky to manage. In this blog post, we&amp;rsquo;ll delve into the concept of &lt;code&gt;init&lt;/code&gt; functions, their use cases, execution order, and common pitfalls.&lt;/p&gt;&#xA;&lt;h2 id=&#34;what-are-init-functions&#34;&gt;What Are &lt;code&gt;init&lt;/code&gt; Functions?&lt;/h2&gt;&#xA;&lt;p&gt;In Go, an &lt;code&gt;init&lt;/code&gt; function is a special type of function used for package-level initialization. When a package is imported, the constant and variable declarations within the package are evaluated. After that, the &lt;code&gt;init&lt;/code&gt; functions are executed. Here&amp;rsquo;s a simple example to illustrate:&lt;/p&gt;</description>
+      <title>An AI tutor that watches every keystroke</title>
+      <link>https://mkabdelrahman.github.io/posts/lernen-ai-tutor-watching-keystrokes/</link>
+      <pubDate>Mon, 04 May 2026 00:00:00 +0000</pubDate>
+      <guid>https://mkabdelrahman.github.io/posts/lernen-ai-tutor-watching-keystrokes/</guid>
+      <description>&lt;h2 id=&#34;a-flashcard-app-but-the-ai-is-in-the-loop&#34;&gt;&#xA;  A flashcard app, but the AI is in the loop&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#a-flashcard-app-but-the-ai-is-in-the-loop&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;Most &amp;ldquo;AI study buddies&amp;rdquo; are chatbots glued to the side of a flashcard app. You study, then you ask a question, then the model answers from cold context. The model has no idea you just got the same word wrong twice and replayed the audio four times.&lt;/p&gt;&#xA;&lt;p&gt;I wanted to flip that. The model should see every action — reveals, replays, grades, notes — and react inside the study loop, not after it.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

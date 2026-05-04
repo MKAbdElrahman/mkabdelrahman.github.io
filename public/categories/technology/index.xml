@@ -2,46 +2,25 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Technology on Mohamed Abdelrahman</title>
-    <link>http://localhost:1313/categories/technology/</link>
+    <link>https://mkabdelrahman.github.io/categories/technology/</link>
     <description>Recent content in Technology on Mohamed Abdelrahman</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 07 Mar 2024 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/categories/technology/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 04 May 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://mkabdelrahman.github.io/categories/technology/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Microkernel Architecture (Plug-in Architecture)</title>
-      <link>http://localhost:1313/posts/microkernel/</link>
-      <pubDate>Thu, 07 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/microkernel/</guid>
-      <description>&lt;p&gt;&lt;img src=&#34;http://localhost:1313/images/The-microkernel-architecture-pattern.png&#34; alt=&#34;layered architecture style&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;Microkernel architecture is an architecural style where a minimal core system (the microkernel) handles generic or stable domain tasks.  Other functionalities are provided by pluggable modules and communicate with the core system through well-defined interfaces.&lt;/p&gt;&#xA;&lt;p&gt;You might encounter it in familiar applications:&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Web Browser Extensions:&lt;/strong&gt;  Many web browsers allow you to install extensions that add new functionality. These extensions act as plug-ins, extending the core features of the browser without modifying its core code.&lt;/p&gt;</description>
+      <title>An AI tutor that watches every keystroke</title>
+      <link>https://mkabdelrahman.github.io/posts/lernen-ai-tutor-watching-keystrokes/</link>
+      <pubDate>Mon, 04 May 2026 00:00:00 +0000</pubDate>
+      <guid>https://mkabdelrahman.github.io/posts/lernen-ai-tutor-watching-keystrokes/</guid>
+      <description>&lt;h2 id=&#34;a-flashcard-app-but-the-ai-is-in-the-loop&#34;&gt;&#xA;  A flashcard app, but the AI is in the loop&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#a-flashcard-app-but-the-ai-is-in-the-loop&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;Most &amp;ldquo;AI study buddies&amp;rdquo; are chatbots glued to the side of a flashcard app. You study, then you ask a question, then the model answers from cold context. The model has no idea you just got the same word wrong twice and replayed the audio four times.&lt;/p&gt;&#xA;&lt;p&gt;I wanted to flip that. The model should see every action — reveals, replays, grades, notes — and react inside the study loop, not after it.&lt;/p&gt;</description>
     </item>
     <item>
-      <title>The Layered Architecture Style</title>
-      <link>http://localhost:1313/posts/layered-architecture-style/</link>
-      <pubDate>Thu, 29 Feb 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/layered-architecture-style/</guid>
-      <description>&lt;p&gt;&lt;img src=&#34;http://localhost:1313/images/layered-architecture-style.png&#34; alt=&#34;layered architecture style&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;The &lt;strong&gt;layered architecture&lt;/strong&gt; is a monolithic architectural style that organizes an application into &lt;strong&gt;horizontal layers&lt;/strong&gt;, each focused on &lt;strong&gt;distinct technical concerns&lt;/strong&gt;.&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Understanding the Terms:&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;Monolithic application:&lt;/strong&gt; The entire application is deployed as a single unit.&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Distributed application:&lt;/strong&gt; Application components are split across different machines and communicate through a network.&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Technical partitioning:&lt;/strong&gt; Application components are organized based on technical aspects like data access or user interface, rather than business domains.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;&lt;strong&gt;Layers in the Layered Architecture:&lt;/strong&gt;&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title> Microservices: An Extreme Form of Decoupling for Large-Scale Systems</title>
-      <link>http://localhost:1313/posts/microservices-and-coupling/</link>
-      <pubDate>Wed, 21 Feb 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/microservices-and-coupling/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;The microservices architecture style represents an extreme form of decoupling tailored for large-scale systems where hundreds of developers collaborate simultaneously. By embracing logical, spatial, temporal, and technology decoupling, teams can work autonomously and iterate rapidly. In this post, we delve into how microservices reduce coupling at various levels, enabling scalability, agility, and independent deployability.&lt;/p&gt;&#xA;&lt;h3 id=&#34;microservices-decoupling-at-scale&#34;&gt;Microservices: Decoupling at Scale&lt;/h3&gt;&#xA;&lt;p&gt;Microservices architecture represents a paradigm shift in software development, embodying the principles of extreme decoupling to address the challenges of building and maintaining large-scale applications. At its core, microservices architecture involves breaking down monolithic applications into smaller, self-contained services, each responsible for a specific business function or capability. These services, often referred to as microservices, operate independently of each other and communicate through well-defined APIs.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Simplify Configuration Management in Go with the &#39;conf&#39; Package</title>
-      <link>http://localhost:1313/posts/go-conf-pkg/</link>
-      <pubDate>Wed, 25 Oct 2023 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/go-conf-pkg/</guid>
-      <description>&lt;p&gt;The &amp;ldquo;conf&amp;rdquo; package is designed to make configuration management in Go straightforward and flexible. It allows you to define your application&amp;rsquo;s configuration as a struct and then parse it for both environment variables and command-line arguments. This approach makes it easy to handle different configuration sources, and the package provides a variety of customization options through struct tags.&lt;/p&gt;&#xA;&lt;p&gt;First, you need to install the &amp;ldquo;conf&amp;rdquo; package:&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;go get github.com/ardanlabs/conf/v3&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Define a struct that represents your application&amp;rsquo;s configuration. You can use struct tags to specify default values, environment variable names, and other options.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Understanding Go&#39;s init Functions: Best Practices and Common Misuses</title>
-      <link>http://localhost:1313/posts/go-init-functions/</link>
-      <pubDate>Sun, 22 Oct 2023 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/go-init-functions/</guid>
-      <description>&lt;p&gt;In Go, &lt;code&gt;init&lt;/code&gt; functions play a crucial role in package initialization. They are used to set up the initial state of your application, and their behavior can be both powerful and tricky to manage. In this blog post, we&amp;rsquo;ll delve into the concept of &lt;code&gt;init&lt;/code&gt; functions, their use cases, execution order, and common pitfalls.&lt;/p&gt;&#xA;&lt;h2 id=&#34;what-are-init-functions&#34;&gt;What Are &lt;code&gt;init&lt;/code&gt; Functions?&lt;/h2&gt;&#xA;&lt;p&gt;In Go, an &lt;code&gt;init&lt;/code&gt; function is a special type of function used for package-level initialization. When a package is imported, the constant and variable declarations within the package are evaluated. After that, the &lt;code&gt;init&lt;/code&gt; functions are executed. Here&amp;rsquo;s a simple example to illustrate:&lt;/p&gt;</description>
+      <title>[Draft] Compaction Algorithms for Long-Running Agent Sessions</title>
+      <link>https://mkabdelrahman.github.io/posts/agent-context-compaction-strategies/</link>
+      <pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://mkabdelrahman.github.io/posts/agent-context-compaction-strategies/</guid>
+      <description>&lt;h2 id=&#34;the-problem&#34;&gt;&#xA;  The problem&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#the-problem&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;A long-running agent accumulates messages over time: user prompts, model responses, reasoning traces, tool calls, tool outputs. The model&amp;rsquo;s context window is finite — from a hundred thousand tokens on the smaller end to a million or more on the largest current frontier models. Once the conversation no longer fits, continuing without intervention triggers a hard error or silent truncation by the provider.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
