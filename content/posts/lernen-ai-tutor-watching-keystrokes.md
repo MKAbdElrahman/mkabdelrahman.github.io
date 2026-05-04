@@ -139,27 +139,3 @@ The runtime parses the trailer, **strips it from the visible tip**, resolves eac
 Guards keep the queue sane: capped at 2 per tip, deduped against the next 8 cards already coming up, silent skip for words that don't match anything in the deck. The user sees the tip and the next card; the structured machinery is invisible.
 
 This is the lightest possible "tool use" — no function-calling APIs, no tool-result round-trips, just a parsable trailer and local resolution. It works the same on OpenAI and Anthropic.
-
-## The good parts about doing this in a TUI
-
-A few things only landed cleanly because the surface is a terminal:
-
-**Stream visibility.** Streaming responses show up live in the panel — there's no "wait for the response, then render" lag. The user sees the tip arrive token by token alongside the next card.
-
-**Side panel as ambient state.** The chat panel is always visible by default but doesn't capture keystrokes until you press `tab`. That separation took me three iterations to get right (default-open kept eating the `1-4` grade keys), but now the panel is a calm observer most of the time and a chat input when you ask for it.
-
-**The whole prompt is text.** No DOM, no framework. Stitching together the system prompt is a few `fmt.Fprintf` calls into a `strings.Builder`. The session roster, the prior-sessions block, the per-card behavior summary — they're all just functions that return strings. Easy to test, easy to inspect.
-
-There's a `TestShowSystemPrompt` test that just runs through a synthetic study sequence and prints the resulting prompt to stdout. That's the most useful test in the repo for tuning the AI's behavior — you can read what the model will actually see.
-
-## Where this goes next
-
-A few directions on my list:
-
-- **Active recall first.** Currently `a` for typing your guess is opt-in. Making it the default would be a step-change in retention but a real UX shift.
-- **Calibration tracking.** The session bundle already records the user's grade plus the teacher's reaction. Cross-referencing — *"you graded Good but the same card came back as Again 12 minutes later"* — would make a useful long-term signal.
-- **Cross-deck context.** Today every deck has its own history file. A shared "things you generally struggle with" layer would help once you study more than one deck.
-
-The code lives in a single Go module: `github.com/mkcodedev/lernen`. About 2.5K lines including tests, no external services beyond an OpenAI or Anthropic API key. Drop in any Anki `.apkg` and run.
-
-The model I keep coming back to: **an AI is only as useful as its context, and the right place to assemble that context is inside the app — not a generic chat sidebar that has to ask you what you're doing.**

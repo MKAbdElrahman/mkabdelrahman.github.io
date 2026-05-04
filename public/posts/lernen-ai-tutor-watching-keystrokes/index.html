@@ -163,7 +163,7 @@
             </span>
             <span class="reading-time">
               <i class="fa-solid fa-clock" aria-hidden="true"></i>
-              8-minute read
+              6-minute read
             </span>
           </div>
           
@@ -331,33 +331,6 @@ INJECT: das Brot, das Brötchen
 </code></pre><p>The runtime parses the trailer, <strong>strips it from the visible tip</strong>, resolves each word against the deck (case-insensitive substring on the canonical form), and inserts up to 2 matched cards at the next position in the study queue. A status flash announces it: <em>&quot;+2 related cards queued by tutor.&quot;</em></p>
 <p>Guards keep the queue sane: capped at 2 per tip, deduped against the next 8 cards already coming up, silent skip for words that don&rsquo;t match anything in the deck. The user sees the tip and the next card; the structured machinery is invisible.</p>
 <p>This is the lightest possible &ldquo;tool use&rdquo; — no function-calling APIs, no tool-result round-trips, just a parsable trailer and local resolution. It works the same on OpenAI and Anthropic.</p>
-<h2 id="the-good-parts-about-doing-this-in-a-tui">
-  The good parts about doing this in a TUI
-  <a class="heading-link" href="#the-good-parts-about-doing-this-in-a-tui">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>A few things only landed cleanly because the surface is a terminal:</p>
-<p><strong>Stream visibility.</strong> Streaming responses show up live in the panel — there&rsquo;s no &ldquo;wait for the response, then render&rdquo; lag. The user sees the tip arrive token by token alongside the next card.</p>
-<p><strong>Side panel as ambient state.</strong> The chat panel is always visible by default but doesn&rsquo;t capture keystrokes until you press <code>tab</code>. That separation took me three iterations to get right (default-open kept eating the <code>1-4</code> grade keys), but now the panel is a calm observer most of the time and a chat input when you ask for it.</p>
-<p><strong>The whole prompt is text.</strong> No DOM, no framework. Stitching together the system prompt is a few <code>fmt.Fprintf</code> calls into a <code>strings.Builder</code>. The session roster, the prior-sessions block, the per-card behavior summary — they&rsquo;re all just functions that return strings. Easy to test, easy to inspect.</p>
-<p>There&rsquo;s a <code>TestShowSystemPrompt</code> test that just runs through a synthetic study sequence and prints the resulting prompt to stdout. That&rsquo;s the most useful test in the repo for tuning the AI&rsquo;s behavior — you can read what the model will actually see.</p>
-<h2 id="where-this-goes-next">
-  Where this goes next
-  <a class="heading-link" href="#where-this-goes-next">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>A few directions on my list:</p>
-<ul>
-<li><strong>Active recall first.</strong> Currently <code>a</code> for typing your guess is opt-in. Making it the default would be a step-change in retention but a real UX shift.</li>
-<li><strong>Calibration tracking.</strong> The session bundle already records the user&rsquo;s grade plus the teacher&rsquo;s reaction. Cross-referencing — <em>&ldquo;you graded Good but the same card came back as Again 12 minutes later&rdquo;</em> — would make a useful long-term signal.</li>
-<li><strong>Cross-deck context.</strong> Today every deck has its own history file. A shared &ldquo;things you generally struggle with&rdquo; layer would help once you study more than one deck.</li>
-</ul>
-<p>The code lives in a single Go module: <code>github.com/mkcodedev/lernen</code>. About 2.5K lines including tests, no external services beyond an OpenAI or Anthropic API key. Drop in any Anki <code>.apkg</code> and run.</p>
-<p>The model I keep coming back to: <strong>an AI is only as useful as its context, and the right place to assemble that context is inside the app — not a generic chat sidebar that has to ask you what you&rsquo;re doing.</strong></p>
 
       </div>
 
